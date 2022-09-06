@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Alunos {
+  id         Int      @id
+  nome       String
+  cpf        String   @unique
+  telefone   String
+  nascimento DateTime
+  turma      String
+
+  Emails    Emails[]
+  Presencas Presencas[]
+
+  @@map("alunos")
+}
+
+model Emails {
+  id       Int    @id @default(autoincrement())
+  id_aluno Int
+  email    String
+
+  alunos Alunos @relation(fields: [id_aluno], references: [id])
+
+  @@map("emails")
+}
+
+model Presencas {
+  id       Int      @id @default(autoincrement())
+  id_aluno Int
+  horario  DateTime @default(now())
+  atrasado Boolean
+
+  alunos Alunos @relation(fields: [id_aluno], references: [id])
+
+  @@map("presencas")
+}
+
+model Salas {
+  id        Int      @id @default(autoincrement())
+  google_id String
+  meet      String
+  turma     String
+  horario   DateTime @default(now())
+  bloco     Int
+
+  @@map("salas")
+}

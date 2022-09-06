@@ -1,0 +1,43 @@
+version: '3'
+services:
+  # Postgres image
+  bucica_back_postgres:
+    container_name: bucica_back_postgres_dev
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - db_bubica_back:/var/lib/postgresql/data
+      - ./prisma:/prisma
+
+  # Node image
+  bucica_back_app:
+    container_name: bucica_back_app_dev
+    build: .
+    environment:
+      - NODE_ENV=development
+      - PORT=${PORT}
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - ./node_modules:/usr/app/node_modules
+      - ./src:/usr/app/src
+      - ./prisma:/usr/app/prisma
+      - ./.env.dev:/usr/app/.env.dev
+      - ./.eslintrc.json:/usr/app/.eslintrc.json
+      - ./.gitignore:/usr/app/.gitignore
+      - ./.prettierrc.json:/usr/app/.prettierrc.json
+      - ./package.json:/usr/app/package.json
+      - ./tsconfig.json:/usr/app/tsconfig.json
+      - ./vite.config.ts:/usr/app/vite.config.ts
+    depends_on:
+      - bucica_back_postgres
+    command: bash -c "npm run dev:env"
+
+volumes:
+  db_bubica_back:
