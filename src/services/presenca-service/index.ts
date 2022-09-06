@@ -1,15 +1,18 @@
 import { getAlunoPorMatricula, getPresencaPorMatricula, insertPresencaAlunoPorMatricula } from "@repositories";
-import { verificarAtraso, verificarPresencaFeita } from "./utils";
+import { errorFactory } from "@utils";
+import { verificarAtraso, verificarFinalSemana, verificarPresencaFeita } from "./utils";
 
 export async function inserirPresenca(matriculaId: number) {
-  if (!matriculaId) return "Você deve mandar a matrícula do aluno!";
+  if (!matriculaId) throw errorFactory("error_matricula_vazia");
 
   const aluno = await getAlunoPorMatricula(matriculaId);
-  if (!aluno) return "A matricula fornecida não existente!";
+  if (!aluno) throw errorFactory("error_matricua_nao_exite");
 
   const presenca = await getPresencaPorMatricula(matriculaId);
-  if (verificarPresencaFeita(presenca)) return "Já foi feito a presenca do aluno hoje!";
+  if (!presenca) return "Presença registrada com sucesso!";
+  if (verificarFinalSemana(presenca)) throw errorFactory("error_final_semana");
+  if (verificarPresencaFeita(presenca)) throw errorFactory("error_presenca_ja_feita");
 
   await insertPresencaAlunoPorMatricula(matriculaId, verificarAtraso());
-  return "Presença feita com sucesso!";
+  return "Presença registrada com sucesso!";
 }
