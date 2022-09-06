@@ -9,7 +9,7 @@
   "scripts": {
     "commit": "cz",
     "lint": "eslint src/**/*.ts",
-    "test:ci": "vitest run",
+    "test:ci": "npx prisma migrate reset --force && vitest run",
     "test:load-env": "dotenv -e .env.test",
     "dev:test": "npm run test:load-env -- vitest run",
     "dev": "tsnd --transpile-only --respawn --ignore-watch node_modules --exit-child --rs -r tsconfig-paths/register src/server.ts",
