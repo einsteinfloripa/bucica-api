@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.$queryRaw`INSERT INTO alunos (id, nome, cpf, telefone, nascimento, turma) VALUES
+  await prisma.$executeRaw`INSERT INTO alunos (id, nome, cpf, telefone, nascimento, turma) VALUES
     (22001, 'Ademir Atanazio Junior', '09583960942', '48991050792', '2003-01-27', 'KJ'),
     (22002, 'Ágata Cristina Cidade', '12238622918', '48984151868', '2001-05-22', 'AT'),
     (22003, 'Alana Rebecca Paizano Silva', '10050952994', '48996837232', '2004-06-17', 'KJ'),
@@ -116,7 +116,7 @@ async function main() {
     (22120, 'Yasmin Duarte Vieira', '13539550950', '48991828795', '2003-12-17', 'KJ');
     `;
 
-  await prisma.$queryRaw`INSERT INTO emails ("id_aluno", email) VALUES
+  await prisma.$executeRaw`INSERT INTO emails ("id_aluno", email) VALUES
     (22001, 'juninhocsbox@gmail.com'),
     (22002, 'agatacidade1@gmail.com'),
     (22003, 'alanarebeccapaizano@gmail.com'),

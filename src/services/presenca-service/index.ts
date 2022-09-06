@@ -9,9 +9,10 @@ export async function inserirPresenca(matriculaId: number) {
   if (!aluno) throw errorFactory("error_matricua_nao_exite");
 
   const presenca = await getPresencaPorMatricula(matriculaId);
+  if (!presenca) return "Presença registrada com sucesso!";
   if (verificarFinalSemana(presenca)) throw errorFactory("error_final_semana");
   if (verificarPresencaFeita(presenca)) throw errorFactory("error_presenca_ja_feita");
 
   await insertPresencaAlunoPorMatricula(matriculaId, verificarAtraso());
-  return "Presença feita com sucesso!";
+  return "Presença registrada com sucesso!";
 }
