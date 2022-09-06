@@ -8,8 +8,10 @@
   "license": "ISC",
   "scripts": {
     "commit": "cz",
+    "lint": "eslint src/**/*.ts",
+    "test:ci": "vitest run",
     "test:load-env": "dotenv -e .env.test",
-    "test": "npm run test:load-env -- vitest run",
+    "dev:test": "npm run test:load-env -- vitest run",
     "dev": "tsnd --transpile-only --respawn --ignore-watch node_modules --exit-child --rs -r tsconfig-paths/register src/server.ts",
     "dev:env": "npm run dev:load-env -- npm run dev",
     "dev:load-env": "dotenv -e .env.dev",
