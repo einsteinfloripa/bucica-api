@@ -9,7 +9,7 @@ const errorSchemas = {
     statusCode: 422,
     mensagem: "Você deve mandar a matrícula do aluno!",
   },
-  error_matricua_nao_exite: {
+  error_matricula_nao_exite: {
     statusCode: 404,
     mensagem: "A matrícula fornecida não existente!",
   },
@@ -20,5 +20,9 @@ const errorSchemas = {
   error_presenca_ja_feita: {
     statusCode: 400,
     mensagem: "Já foi feito a presença do aluno hoje!",
+  },
+  error_cpf_nao_exite: {
+    statusCode: 404,
+    mensagem: "O CPF fornecido não existe!",
   },
 };

@@ -13,3 +13,7 @@ export async function insertPresencaAlunoPorMatricula(matriculaId: number, atras
 export async function getPresencaPorMatricula(matriculaId: number) {
   return await prisma.presencas.findFirst({ where: { id_aluno: +matriculaId }, orderBy: { horario: "desc" } });
 }
+
+export function getAlunoPorCpf(cpf: string) {
+  return prisma.alunos.findUnique({ where: { cpf } });
+}
