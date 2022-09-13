@@ -1,0 +1,21 @@
+{
+  "presets": ["@babel/preset-env", "@babel/preset-typescript"],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "root": ["./src"],
+        "alias": {
+          "@db": "./src/db/index",
+          "@routers": "./src/routers/index",
+          "@middlewares": "./src/middlewares/index",
+          "@controllers": "./src/controllers/index",
+          "@services": "./src/services/index",
+          "@utils": "./src/utils/index",
+          "@schemas": "./src/models/index",
+          "@repositories": "./src/repositories/index"
+        }
+      }
+    ]
+  ]
+}
