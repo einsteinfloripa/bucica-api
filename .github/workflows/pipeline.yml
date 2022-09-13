@@ -87,6 +87,7 @@ jobs:
           envkey_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           envkey_POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
           envkey_DATABASE_URL: "postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@${{ secrets.POSTGRES_HOST }}:5432/${{ secrets.POSTGRES_DB }}"
+          envkey_PORT: ${{ secrets.PORT }}
           file_name: .env.prod
           fail_on_empty: true
 
