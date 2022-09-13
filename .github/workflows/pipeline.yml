@@ -31,10 +31,10 @@ jobs:
           node-version: 16
 
       - name: Instalando Depedências
-      - run: npm i
+        run: npm i
 
       - name: Rodando Build
-      - run: npm run prod:build
+        run: npm run prod:build
 
   test:
     runs-on: ubuntu-latest
@@ -59,10 +59,10 @@ jobs:
           node-version: 16
 
       - name: Instalando Depedências
-      - run: npm i
+        run: npm i
 
       - name: Rodando Testes
-      - run: npm run test:ci
+        run: npm run test:ci
 
   deploy:
     runs-on: self-hosted
@@ -83,4 +83,4 @@ jobs:
           fail_on_empty: false
 
       - name: Subir Container
-      - run: docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d
+        run: docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d
