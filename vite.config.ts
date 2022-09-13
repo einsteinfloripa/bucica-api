@@ -4,7 +4,12 @@ import { defineConfig } from "vite";
 import path from "path";
 
 export default defineConfig({
-  test: {},
+  test: {
+    clearMocks: true,
+    testTimeout: 10000,
+    maxThreads: 1,
+    minThreads: 1,
+  },
   resolve: {
     alias: {
       "@controllers": path.resolve(__dirname, "./src/controllers/index"),

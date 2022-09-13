@@ -1,18 +1,41 @@
-import { getAlunoPorMatricula, getPresencaPorMatricula, insertPresencaAlunoPorMatricula } from "@repositories";
+import {
+  getAlunoPorCpf,
+  getAlunoPorMatricula,
+  getPresencaPorMatricula,
+  insertPresencaAlunoPorMatricula,
+} from "@repositories";
 import { errorFactory } from "@utils";
-import { verificarAtraso, verificarFinalSemana, verificarPresencaFeita } from "./utils";
+import { cpfParser, verificarAtraso, verificarFinalSemana, verificarPresencaFeita } from "./utils";
 
-export async function inserirPresenca(matriculaId: number) {
+export async function inserirPresencaQR(matriculaId: number) {
   if (!matriculaId) throw errorFactory("error_matricula_vazia");
 
   const aluno = await getAlunoPorMatricula(matriculaId);
-  if (!aluno) throw errorFactory("error_matricua_nao_exite");
+  if (!aluno) throw errorFactory("error_matricula_nao_exite");
+
+  if (verificarFinalSemana()) throw errorFactory("error_final_semana");
 
   const presenca = await getPresencaPorMatricula(matriculaId);
-  if (!presenca) return "Presença registrada com sucesso!";
-  if (verificarFinalSemana(presenca)) throw errorFactory("error_final_semana");
-  if (verificarPresencaFeita(presenca)) throw errorFactory("error_presenca_ja_feita");
+  if (presenca) {
+    if (verificarPresencaFeita(presenca)) throw errorFactory("error_presenca_ja_feita");
+  }
 
-  await insertPresencaAlunoPorMatricula(matriculaId, verificarAtraso());
+  insertPresencaAlunoPorMatricula(matriculaId, verificarAtraso());
+
+  return "Presença registrada com sucesso!";
+}
+
+export async function inserirPresencaCPF(cpf: string) {
+  const aluno = await getAlunoPorCpf(cpfParser(cpf));
+  if (!aluno) throw errorFactory("error_cpf_nao_exite");
+
+  if (verificarFinalSemana()) throw errorFactory("error_final_semana");
+
+  const presenca = await getPresencaPorMatricula(aluno.id);
+  if (presenca) {
+    if (verificarPresencaFeita(presenca)) throw errorFactory("error_presenca_ja_feita");
+  }
+
+  insertPresencaAlunoPorMatricula(aluno.id, verificarAtraso());
   return "Presença registrada com sucesso!";
 }

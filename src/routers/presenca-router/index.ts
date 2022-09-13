@@ -1,7 +1,7 @@
 import { Router } from "express";
-
-import { postPresencaController } from "@controllers";
+import { postCPFPresencaController, postQRPresencaController } from "@controllers";
 
 export const presencaRouter = Router();
 
-presencaRouter.post("/:matriculaId", postPresencaController);
+presencaRouter.post("/qr/:matriculaId", postQRPresencaController);
+presencaRouter.post("/cpf/:cpf", postCPFPresencaController);

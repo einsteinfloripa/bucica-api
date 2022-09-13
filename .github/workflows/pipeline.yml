@@ -1,4 +1,4 @@
-name: CI + Lint
+name: Pipeline CI/CD
 on:
   pull_request:
     branches:
@@ -6,8 +6,45 @@ on:
       - develop
 
 jobs:
+  # lint:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 16
+
+  #     - name: Instalando Depedências
+  #     - run: npm i
+
+  #     - name: Rodando Lint
+  #     - run: npm run lint
+
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Instalando Depedências
+        run: npm i
+
+      - name: Rodando Build
+        run: npm run prod:build
+
   test:
     runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 5
+
     services:
       postgres:
         image: postgres
@@ -21,10 +58,40 @@ jobs:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/db
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 16
 
-      - run: npm i
-      - run: npm run test:ci
+      - name: Instalando Depedências
+        run: npm i
+
+      - name: Rodando Testes
+        run: npm run test:ci
+
+  deploy:
+    runs-on: self-hosted
+    needs: test
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Criando .env.prod
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          envkey_POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+          envkey_POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          envkey_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          envkey_POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          envkey_DATABASE_URL: "postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@${{ secrets.POSTGRES_HOST }}:5432/${{ secrets.POSTGRES_DB }}"
+          envkey_PORT: ${{ secrets.PORT }}
+          file_name: .env.prod
+          fail_on_empty: true
+
+      - name: Subir Container
+        run: docker-compose -f docker-compose.prod.yml --env-file .env.prod down -v && docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
