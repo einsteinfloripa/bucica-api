@@ -1,14 +1,24 @@
 import { Request, Response } from "express";
+import { inserirPresencaCPF, inserirPresencaQR } from "@services";
 
-import { inserirPresenca } from "@services";
-
-interface PresencaParams {
+interface PresencaQRParams {
   matriculaId: number;
 }
 
-export async function postPresencaController(req: Request<PresencaParams>, res: Response) {
+interface PresencaCPFParams {
+  cpf: string;
+}
+
+export async function postQRPresencaController(req: Request<PresencaQRParams>, res: Response) {
   const { matriculaId } = req.params;
-  const returnService = await inserirPresenca(matriculaId);
+  const returnService = await inserirPresencaQR(matriculaId);
+
+  res.send(returnService);
+}
+
+export async function postCPFPresencaController(req: Request<PresencaCPFParams>, res: Response) {
+  const { cpf } = req.params;
+  const returnService = await inserirPresencaCPF(cpf);
 
   res.send(returnService);
 }

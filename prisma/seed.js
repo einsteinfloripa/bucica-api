@@ -1,9 +1,19 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
-
-async function main() {
-  await prisma.$executeRaw`INSERT INTO alunos (id, nome, cpf, telefone, nascimento, turma) VALUES
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const client_1 = require("@prisma/client");
+const prisma = new client_1.PrismaClient();
+function main() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield prisma.$executeRaw `INSERT INTO alunos (id, nome, cpf, telefone, nascimento, turma) VALUES
     (22001, 'Ademir Atanazio Junior', '09583960942', '48991050792', '2003-01-27', 'KJ'),
     (22002, 'Ágata Cristina Cidade', '12238622918', '48984151868', '2001-05-22', 'AT'),
     (22003, 'Alana Rebecca Paizano Silva', '10050952994', '48996837232', '2004-06-17', 'KJ'),
@@ -115,8 +125,7 @@ async function main() {
     (22119, 'Vitória Soares de Santana', '12657483909', '48984647001', '2005-03-24', 'AT'),
     (22120, 'Yasmin Duarte Vieira', '13539550950', '48991828795', '2003-12-17', 'KJ');
     `;
-
-  await prisma.$executeRaw`INSERT INTO emails ("id_aluno", email) VALUES
+        yield prisma.$executeRaw `INSERT INTO emails ("id_aluno", email) VALUES
     (22001, 'juninhocsbox@gmail.com'),
     (22002, 'agatacidade1@gmail.com'),
     (22003, 'alanarebeccapaizano@gmail.com'),
@@ -232,8 +241,8 @@ async function main() {
     (22119, 'vitoriassantana24@gmail.com'),
     (22120, 'yasmindvieira17@gmail.com');
     `;
+    });
 }
-
 main()
-  .catch((e) => console.error(e.message))
-  .finally(() => prisma.$disconnect());
+    .catch((e) => console.error(e.message))
+    .finally(() => prisma.$disconnect());
