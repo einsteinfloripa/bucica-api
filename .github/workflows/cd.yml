@@ -47,4 +47,4 @@ jobs:
           fail_on_empty: true
 
       - name: Subir Container
-        run: docker-compose -f docker-compose.prod.yml --env-file .env.prod down -v && docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
+        run: docker-compose -f docker-compose.prod.yml --env-file .env.prod down && docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
