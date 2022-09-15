@@ -35,7 +35,7 @@ model Presencas {
   id       Int      @id @default(autoincrement())
   id_aluno Int
   horario  DateTime @default(now())
-  atrasado Boolean
+  atrasado Float    
 
   alunos Alunos @relation(fields: [id_aluno], references: [id])
 

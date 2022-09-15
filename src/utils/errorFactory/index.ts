@@ -25,4 +25,12 @@ const errorSchemas = {
     statusCode: 404,
     mensagem: "O CPF fornecido não existe!",
   },
+  error_cpf_vazio: {
+    statusCode: 422,
+    mensagem: "Você deve mandar o CPF do aluno!",
+  },
+  error_fora_hora_aula: {
+    statusCode: 400,
+    mensagem: "Fora do horário de aula!",
+  },
 };

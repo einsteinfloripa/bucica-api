@@ -6,7 +6,7 @@ export async function getAlunoPorMatricula(matriculaId: number) {
   return aluno;
 }
 
-export async function insertPresencaAlunoPorMatricula(matriculaId: number, atrasado: boolean) {
+export async function insertPresencaAlunoPorMatricula(matriculaId: number, atrasado: number) {
   return await prisma.presencas.create({ data: { id_aluno: +matriculaId, atrasado: atrasado } });
 }
 
