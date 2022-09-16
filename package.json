@@ -21,7 +21,7 @@
     "dev:load-env": "dotenv -e .env.dev",
     "dev:docker": "docker-compose -f docker-compose.dev.yml --env-file .env.dev up -d",
     "migrate:dev": "npm run dev:load-env -- npx prisma db push --force-reset && npm run dev:load-env -- npx prisma db seed",
-    "test:ci": "npx prisma migrate reset --force && vitest run",
+    "test:ci": "npm run test:db:push --force && vitest run",
     "test:load-env": "dotenv -e .env.test",
     "test:db:push": "npx prisma migrate reset --force --skip-seed"
   },
