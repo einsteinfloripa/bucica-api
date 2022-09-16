@@ -23,7 +23,7 @@
     "migrate:dev": "npm run dev:load-env -- npx prisma db push --force-reset && npm run dev:load-env -- npx prisma db seed",
     "test:ci": "npx prisma migrate reset --force && vitest run",
     "test:load-env": "dotenv -e .env.test",
-    "test:db:push": "npx prisma migrate deploy && npx prisma db seed"
+    "test:db:push": "npx prisma migrate reset --force --skip-seed"
   },
   "dependencies": {
     "@prisma/client": "^4.3.1",

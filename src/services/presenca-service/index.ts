@@ -15,7 +15,7 @@ import {
 
 export async function inserirPresencaQR(matriculaId: number) {
   if (verificarHorarioAula()) throw errorFactory("error_fora_hora_aula");
-  // if (verificarFinalSemana()) throw errorFactory("error_final_semana");
+  if (verificarFinalSemana()) throw errorFactory("error_final_semana");
 
   if (!matriculaId) throw errorFactory("error_matricula_vazia");
 
@@ -28,7 +28,8 @@ export async function inserirPresencaQR(matriculaId: number) {
   }
 
   const atraso = verificarAtraso();
-  insertPresencaAlunoPorMatricula(matriculaId, atraso);
+
+  await insertPresencaAlunoPorMatricula(matriculaId, atraso);
 
   const mensagemAtraso = "Você chegou atrasado!";
   const mensagemMeiaFalta = "Você recebeu meia falta!";
@@ -42,7 +43,7 @@ export async function inserirPresencaQR(matriculaId: number) {
 
 export async function inserirPresencaCPF(cpf: string) {
   if (verificarHorarioAula()) throw errorFactory("error_fora_hora_aula");
-  // if (verificarFinalSemana()) throw errorFactory("error_final_semana");
+  if (verificarFinalSemana()) throw errorFactory("error_final_semana");
 
   if (!cpf) throw errorFactory("error_cpf_vazio");
 
@@ -54,6 +55,16 @@ export async function inserirPresencaCPF(cpf: string) {
     if (verificarPresencaFeita(presenca)) throw errorFactory("error_presenca_ja_feita");
   }
 
-  insertPresencaAlunoPorMatricula(aluno.id, verificarAtraso());
-  return "Presença registrada com sucesso!";
+  const atraso = verificarAtraso();
+
+  await insertPresencaAlunoPorMatricula(aluno.id, atraso);
+
+  const mensagemAtraso = "Você chegou atrasado!";
+  const mensagemMeiaFalta = "Você recebeu meia falta!";
+  const mensagemPresenca = "Presença feita com sucesso!";
+
+  if (atraso === 1) return mensagemAtraso;
+  if (atraso === 0.5) return mensagemMeiaFalta;
+
+  return mensagemPresenca;
 }
