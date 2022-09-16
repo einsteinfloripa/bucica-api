@@ -15,14 +15,15 @@
     "prod:db:push": "npx prisma migrate deploy",
     "prod:start": "npm run prod:load-env -- npm run prod:db:push && npm run prod:build && npm run prod:load-env -- npm run prod:server",
     "prod:docker": "docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d",
-    "dev": "tsnd --transpile-only --respwn --ignore-watch node_modules --exit-child --rs -r tsconfig-paths/register src/server.ts",
-    "dev:test": "npm run test:load-env -- vitest run",
+    "dev": "tsnd --transpile-only --respawn --ignore-watch node_modules --exit-child --rs -r tsconfig-paths/register src/server.ts",
+    "dev:test": "npm run test:load-env -- npm run test:db:push && npm run test:load-env -- vitest run",
     "dev:env": "npm run dev:load-env -- npm run dev",
     "dev:load-env": "dotenv -e .env.dev",
     "dev:docker": "docker-compose -f docker-compose.dev.yml --env-file .env.dev up -d",
-    "migrate:dev": "npm run dev:load-env -- npx prisma migrate dev",
-    "test:ci": "npx prisma migrate reset --force && vitest run",
-    "test:load-env": "dotenv -e .env.test"
+    "migrate:dev": "npm run dev:load-env -- npx prisma db push --force-reset && npm run dev:load-env -- npx prisma db seed",
+    "test:ci": "npm run test:db:push --force && vitest run",
+    "test:load-env": "dotenv -e .env.test",
+    "test:db:push": "npx prisma migrate reset --force --skip-seed"
   },
   "dependencies": {
     "@prisma/client": "^4.3.1",

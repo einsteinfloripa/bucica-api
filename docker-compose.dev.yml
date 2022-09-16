@@ -37,7 +37,7 @@ services:
       - ./vite.config.ts:/usr/app/vite.config.ts
     depends_on:
       - bucica_back_postgres
-    command: bash -c "npm run dev:env"
+    command: bash -c "npm run migrate:dev && npm run dev:env"
 
 volumes:
   db_bubica_back:
