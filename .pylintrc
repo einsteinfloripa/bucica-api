@@ -1,0 +1,42 @@
+[MASTER]
+init-hook='import sys; sys.path.append("src")'
+
+disable=
+    #  CONVENÇOES
+    # Nao estamos usando doctrings
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-function-docstring,
+
+
+    # CONFLITOS
+    # O pytest requer que o nome do argumento seja igual ao da fixture e isso conflita com
+    # o seguinte warning do pylint
+    redefined-outer-name,
+
+    unbalanced-tuple-unpacking,
+
+
+[BASIC]
+    #Nomenclatura
+    #funçoes
+    function-naming-style=snake_case
+    # variavies
+    variable-naming-style=snake_case
+    # constantes
+    const-naming-style=UPPER_CASE
+    # atributos
+    attr-naming-style=snake_case
+    # argumentos
+    argument-naming-style=snake_case
+
+    # Classes
+    class-naming-style=PascalCase
+    # classes-atributos
+    class-attribute-naming-style=any
+    # classes-constantes
+    class-const-naming-style=UPPER_CASE
+    #classes-metodos
+    method-naming-style=snake_case
+    # Modulos
+    module-naming-style=snake_case
