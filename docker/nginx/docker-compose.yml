@@ -1,0 +1,23 @@
+version: '3'
+services:
+  bucica_nginx:
+    container_name: bucica_nginx
+    build: .
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    networks:
+      - bucica-network-staging
+      - bucica-network-production
+    volumes:
+      - /etc/ssl/einsteinfloripa.com.br.crt:/etc/ssl/einsteinfloripa.com.br.crt
+      - /etc/ssl/einsteinfloripa.com.br.key:/etc/ssl/einsteinfloripa.com.br.key
+
+networks:
+  bucica-network-staging:
+    name: bucica-network-staging
+    external: true
+  bucica-network-production:
+    name: bucica-network-production
+    # external: true Comentando enquanto nao temos o network production

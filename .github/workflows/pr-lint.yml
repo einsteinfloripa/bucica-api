@@ -1,0 +1,15 @@
+name: CI(PR Lint)
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  pr_lint:
+    name: PR Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: vijaykramesh/pr-lint-action@v1.0
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
