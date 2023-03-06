@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  bucica-api-staging:
+    container_name: bucica-api-staging
+    image: bucica-api-staging
+    ports:
+      - "${PORT}:${PORT}"
+    build:
+      context: ../..
+      dockerfile: docker/staging/Dockerfile
+    depends_on:
+      - bucica-postgres-db
+    networks:
+      - bucica-network-staging
+    command:
+      [
+        "poetry",
+        "run",
+        "uvicorn",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "${PORT}",
+        "src.main:app"
+      ]
+
+  bucica-postgres-db:
+    container_name: bucica-postgres-db-staging
+    image: postgres:12.2-alpine
+    ports:
+      - "${DB_PORT}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres-data-staging:/var/lib/postgresql/data
+    networks:
+      - bucica-network-staging
+
+networks:
+  bucica-network-staging:
+    name: bucica-network-staging
+
+volumes:
+  postgres-data-staging:
