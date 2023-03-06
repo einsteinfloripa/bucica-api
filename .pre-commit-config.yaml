@@ -26,7 +26,7 @@ repos:
       - id: Mypy
         name: Type Checking in Project
         entry: mypy
-        args: ["--namespace-packages", ""]
+        args: ["--namespace-packages"]
         language: system
         types: [python]
 
