@@ -1,6 +1,8 @@
 [MASTER]
 init-hook='import sys; sys.path.append("src")'
 
+extension-pkg-whitelist=pydantic
+
 disable=
     #  CONVENÇOES
     # Nao estamos usando doctrings
@@ -18,8 +20,9 @@ disable=
 
 
 [BASIC]
-    #Nomenclatura
-    #funçoes
+    ### Nomenclatura ###
+
+    # funçoes
     function-naming-style=snake_case
     # variavies
     variable-naming-style=snake_case
@@ -38,5 +41,6 @@ disable=
     class-const-naming-style=UPPER_CASE
     #classes-metodos
     method-naming-style=snake_case
+
     # Modulos
     module-naming-style=snake_case
