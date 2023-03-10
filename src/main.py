@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
-from routers import check_attandance
-from utils.app_exceptions import AppExceptionCase, app_exception_handler
+from src.routers import check_attandance
+from src.utils.app_exceptions import AppExceptionCase, app_exception_handler
 
 app = FastAPI()
 

@@ -21,10 +21,10 @@ class AppException:
             """
             Update failed
             """
-            status_code = 500 # what status code ???
+            status_code = 500  # what status code ???
             AppExceptionCase.__init__(self, status_code, context)
 
-    class StudantGetItem(AppExceptionCase):
+    class StudantNotFound(AppExceptionCase):
         def __init__(self, context: dict = None):
             """
             Stutand not found

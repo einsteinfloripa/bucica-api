@@ -1,21 +1,25 @@
-from typing import Any
+from datetime import datetime
+from typing import List
+
+from src.schemas.studants import StudantSchema
 
 
 class MockDataBase:
     def __init__(self) -> None:
-        self.data: Any = {}
+        self.data: List[StudantSchema] = [
+            StudantSchema(
+                cpf="00000000000",
+                name="Jhon Doe",
+                email="johndoe@gmail.com",
+                attendence=[datetime.now()],
+            )
+        ]
 
-    def get(self, key: Any) -> Any:
-        return self.data.get(key)
-
-    def set(self, key: Any, value: Any) -> None:
-        self.data[key] = value
-
-    def delete(self, key: Any) -> None:
-        del self.data[key]
-
-    def clear(self) -> None:
-        self.data = {}
+    def get(self, key: str) -> StudantSchema | None:
+        for item in self.data:
+            if item.cpf == key:
+                return item
+        return None
 
 
 mockdb = MockDataBase()
