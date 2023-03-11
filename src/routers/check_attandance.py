@@ -10,5 +10,11 @@ router = APIRouter(prefix="/presença")
 
 @router.post("/{cpf_number}")
 async def update_attandence(cpf_number: str):
-    result = StudantService().update_attendence(cpf_number)
+    result = StudantService().get_studant(cpf_number)
+    return handle_result(result)
+
+
+@router.get("/{cpf_number}")
+async def get_studant(cpf_number: str):
+    result = StudantService().get_studant(cpf_number)
     return handle_result(result)

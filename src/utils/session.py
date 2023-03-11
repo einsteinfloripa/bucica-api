@@ -1,32 +1,19 @@
-from datetime import datetime
-from typing import List
+from typing import Generator
 
-from src.schemas.studants import StudantSchema
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session, sessionmaker
 
+SQLALCHEMY_DATABASE_URL = "sqlite:///./bucica.db"
 
-class MockDataBase:
-    def __init__(self) -> None:
-        self.data: List[StudantSchema] = [
-            StudantSchema(
-                cpf="00000000000",
-                name="Jhon Doe",
-                email="johndoe@gmail.com",
-                attendence=[datetime.now()],
-            )
-        ]
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+)
 
-    def get(self, key: str) -> StudantSchema | None:
-        for item in self.data:
-            if item.cpf == key:
-                return item
-        return None
-
-
-mockdb = MockDataBase()
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 class DBSessionMixin:
-    def __init__(self, db: MockDataBase = mockdb):
+    def __init__(self, db: Session = SessionLocal()):
         self.db = db
 
 

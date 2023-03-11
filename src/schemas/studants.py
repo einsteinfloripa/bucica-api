@@ -1,6 +1,3 @@
-from datetime import datetime
-from typing import List
-
 from pydantic import BaseModel
 
 
@@ -9,4 +6,6 @@ class StudantSchema(BaseModel):
     cpf: str = ""
     email: str = ""
     phone: str = ""
-    attendance: List[datetime] = []
+
+    class Config:
+        orm_mode = True
