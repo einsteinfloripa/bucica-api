@@ -12,6 +12,7 @@ fastapi = "^0.92.0"
 sqlalchemy = "^2.0.4"
 uvicorn = "^0.20.0"
 pydantic = "^1.10.5"
+psycopg2 = "^2.9.5"
 
 [tool.poetry.group.dev.dependencies]
 pylint = "^2.16.2"

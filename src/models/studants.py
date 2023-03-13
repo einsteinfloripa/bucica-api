@@ -1,21 +1,41 @@
-from sqlalchemy import Column, DateTime, Integer, Sequence, String
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Boolean, Date, DateTime, Enum, ForeignKey, Integer, String
+from sqlalchemy.orm import mapped_column, relationship
 
-Base = declarative_base()
+from src.models.base import Base
+from src.utils.calendar import CourseClass
 
 
-class StudantItem(Base):
-    __tablename__ = "studant_items"
-    name = Column("name", String, index=True)
-    cpf = Column("cpf", String, index=True, primary_key=True)
-    email = Column("email", String)
-    phone = Column("phone", String)
+class CadastroAlunos(Base):
+    __tablename__ = "Cadastro_Alunos"
 
-    def __init__(self, name: str, cpf: str, email: str, phone: str) -> None:
-        self.name = name
-        self.cpf = cpf
-        self.email = email
-        self.phone = phone
+    id = mapped_column(Integer, primary_key=True)
+    name = mapped_column(String, index=True)
+    phone = mapped_column(String)
+    birthdate = mapped_column(Date)
+    rg = mapped_column(String, unique=True)
+    cpf = mapped_column(String, index=True, unique=True)
+    civil_state = mapped_column(String)
+    state = mapped_column(String)
+    city = mapped_column(String)
+    neighborhood = mapped_column(String)
+    street = mapped_column(String)
+    number = mapped_column(String)
+    complement = mapped_column(String)
+    cep = mapped_column(String)
+    email = mapped_column(String)
 
-    def __repr__(self) -> str:
-        return f"<StudantItem(name='{self.name}', cpf='{self.cpf}', email='{self.email}', phone='{self.phone}')>"
+    presencas = relationship("Presenca", back_populates="studants")
+
+
+class Presenca(Base):
+    __tablename__ = "Presenca"
+
+    id = mapped_column(Integer, primary_key=True)
+    studant_id = mapped_column(Integer, ForeignKey("Cadastro_Alunos.id"))
+    datetime = mapped_column(DateTime)
+    # FIXME - This is not working
+    # late = mapped_column("atraso", Enum(CourseClass.Late), create_type=False)
+    late = mapped_column(String)
+    absence = mapped_column(Boolean)
+
+    studants = relationship("CadastroAlunos", back_populates="presencas")

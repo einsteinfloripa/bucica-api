@@ -1,9 +1,9 @@
-from src.models.studants import StudantItem
+from src.models.studants import CadastroAlunos
 from src.utils.app_exceptions import AppExceptionCase
 
 
 class ServiceResult:
-    def __init__(self, arg: AppExceptionCase | StudantItem) -> None:
+    def __init__(self, arg: AppExceptionCase | CadastroAlunos) -> None:
         if isinstance(arg, AppExceptionCase):
             self.success = False
             self.exception_case = arg.exception_case

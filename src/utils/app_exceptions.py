@@ -21,7 +21,7 @@ class AppException:
             """
             Update failed
             """
-            status_code = 500  # what status code ???
+            status_code = 500  # FIXME what status code ???
             AppExceptionCase.__init__(self, status_code, context)
 
     class StudantNotFound(AppExceptionCase):
@@ -38,6 +38,14 @@ class AppException:
             Item is not public and requires auth
             """
             status_code = 401
+            AppExceptionCase.__init__(self, status_code, context)
+
+    class ClassNotFound(AppExceptionCase):
+        def __init__(self, context: dict = None):
+            """
+            Class not found
+            """
+            status_code = 404
             AppExceptionCase.__init__(self, status_code, context)
 
 
