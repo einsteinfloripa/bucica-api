@@ -1,8 +1,8 @@
 from sqlalchemy import Boolean, Date, DateTime, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import mapped_column, relationship
 
-from src.models.base import Base
-from src.utils.calendar import CourseClass
+from src.models.base_models import Base
+from src.utils.schedule import CourseClass
 
 
 class CadastroAlunos(Base):
@@ -32,10 +32,8 @@ class Presenca(Base):
 
     id = mapped_column(Integer, primary_key=True)
     studant_id = mapped_column(Integer, ForeignKey("Cadastro_Alunos.id"))
-    datetime = mapped_column(DateTime)
-    # FIXME - This is not working
-    # late = mapped_column("atraso", Enum(CourseClass.Late), create_type=False)
-    late = mapped_column(String)
+    datetime_of_creation = mapped_column(DateTime)
+    late = mapped_column(Enum(CourseClass.Late))
     absence = mapped_column(Boolean)
 
     studants = relationship("CadastroAlunos", back_populates="presencas")

@@ -1,9 +1,10 @@
-from src.models.studants import CadastroAlunos
+from typing import Any
+
 from src.utils.app_exceptions import AppExceptionCase
 
 
 class ServiceResult:
-    def __init__(self, arg: AppExceptionCase | CadastroAlunos) -> None:
+    def __init__(self, arg: Any) -> None:
         if isinstance(arg, AppExceptionCase):
             self.success = False
             self.exception_case = arg.exception_case

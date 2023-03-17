@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 
 
 class AppExceptionCase(Exception):
-    def __init__(self, status_code: int, context: dict) -> None:
+    def __init__(self, status_code: int, context: dict = None) -> None:
         self.exception_case = self.__class__.__name__
         self.status_code = status_code
         self.context = context
@@ -40,7 +40,7 @@ class AppException:
             status_code = 401
             AppExceptionCase.__init__(self, status_code, context)
 
-    class ClassNotFound(AppExceptionCase):
+    class OngoingClassNotFound(AppExceptionCase):
         def __init__(self, context: dict = None):
             """
             Class not found
@@ -48,10 +48,16 @@ class AppException:
             status_code = 404
             AppExceptionCase.__init__(self, status_code, context)
 
+    class AttendanceAlreadyComfimed(AppExceptionCase):
+        def __init__(self, context: dict = None):
+            """
+            Class not found
+            """
+            status_code = 400
+            AppExceptionCase.__init__(self, status_code, context)
 
-async def app_exception_handler(
-    request: Request, exc: AppExceptionCase
-) -> JSONResponse:
+
+def app_exception_handler(request: Request, exc: AppExceptionCase) -> JSONResponse:
     return JSONResponse(
         status_code=exc.status_code,
         content={

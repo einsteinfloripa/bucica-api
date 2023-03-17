@@ -11,11 +11,3 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 class DBSessionMixin:
     def __init__(self, db: Session = SessionLocal()):
         self.db = db
-
-
-class AppService(DBSessionMixin):
-    pass
-
-
-class AppRepositorie(DBSessionMixin):
-    pass
