@@ -3,7 +3,7 @@
 all:	build-image
 
 dev: ## Start Application in Development mode
-	@poetry run uvicorn src.main:app --reload
+	@poetry run uvicorn src.main:app --reload --env-file .env
 
 deploy-staging: ## Deploy to Staging
 	@docker compose -f docker/staging/docker-compose.yml --env-file .env.staging build --no-cache --pull

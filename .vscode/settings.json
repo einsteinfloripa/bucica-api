@@ -4,13 +4,19 @@
     "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
     "python.formatting.provider": "black",
     "python.formatting.blackPath": "${workspaceFolder}/.venv/bin/black",
-    "python.linting.enabled": true,
+    "python.analysis.ignore": [
+        "${workspaceFolder}/.venv",
+        "${workspaceFolder}/alembic",
+        "${workspaceFolder}/tests",
+        "${workspaceFolder}/src",
+    ],
+    "python.linting.enabled": false,
     "python.linting.pylintEnabled": true,
     "python.linting.pylintPath": "${workspaceFolder}/.venv/bin/pylint",
     "python.linting.pylintArgs": [
         "--rcfile=${workspaceFolder}/.pylintrc"
     ],
-    "python.linting.mypyEnabled": true,
+    "python.linting.mypyEnabled": false,
     "python.linting.mypyPath": "${workspaceFolder}/.venv/bin/mypy",
     "python.linting.mypyArgs": [
         "--config-file=${workspaceFolder}/mypy.ini",

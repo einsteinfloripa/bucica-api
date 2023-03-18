@@ -24,7 +24,7 @@ class AppException:
             status_code = 500  # FIXME what status code ???
             AppExceptionCase.__init__(self, status_code, context)
 
-    class StudantNotFound(AppExceptionCase):
+    class StudentNotFound(AppExceptionCase):
         def __init__(self, context: dict = None):
             """
             Stutand not found
@@ -48,7 +48,7 @@ class AppException:
             status_code = 404
             AppExceptionCase.__init__(self, status_code, context)
 
-    class AttendanceAlreadyComfimed(AppExceptionCase):
+    class AttendanceAlreadyConfirmed(AppExceptionCase):
         def __init__(self, context: dict = None):
             """
             Class not found

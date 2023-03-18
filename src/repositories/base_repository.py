@@ -1,4 +1,4 @@
-from src.utils.session import DBSessionMixin
+from src.database.session import DBSessionMixin
 
 
 class AppRepository(DBSessionMixin):

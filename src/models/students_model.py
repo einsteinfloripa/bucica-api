@@ -1,19 +1,19 @@
 from sqlalchemy import Boolean, Date, DateTime, Enum, ForeignKey, Integer, String
-from sqlalchemy.orm import mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.models.base_models import Base
-from src.utils.schedule import CourseClass
+from src.models.base_model import Base
+from src.utils.schedule import LateTypes
 
 
 class CadastroAlunos(Base):
     __tablename__ = "Cadastro_Alunos"
 
     id = mapped_column(Integer, primary_key=True)
-    name = mapped_column(String, index=True)
+    name = mapped_column(String)
     phone = mapped_column(String)
     birthdate = mapped_column(Date)
-    rg = mapped_column(String, unique=True)
-    cpf = mapped_column(String, index=True, unique=True)
+    rg = mapped_column(String)
+    cpf = mapped_column(String, unique=True)
     civil_state = mapped_column(String)
     state = mapped_column(String)
     city = mapped_column(String)
@@ -24,16 +24,16 @@ class CadastroAlunos(Base):
     cep = mapped_column(String)
     email = mapped_column(String)
 
-    presencas = relationship("Presenca", back_populates="studants")
+    presencas = relationship("Presenca", back_populates="students")
 
 
 class Presenca(Base):
     __tablename__ = "Presenca"
 
     id = mapped_column(Integer, primary_key=True)
-    studant_id = mapped_column(Integer, ForeignKey("Cadastro_Alunos.id"))
+    student_id = mapped_column(Integer, ForeignKey("Cadastro_Alunos.id"))
     datetime_of_creation = mapped_column(DateTime)
-    late = mapped_column(Enum(CourseClass.Late))
+    late = mapped_column(Enum(LateTypes))
     absence = mapped_column(Boolean)
 
-    studants = relationship("CadastroAlunos", back_populates="presencas")
+    students = relationship("CadastroAlunos", back_populates="presencas")

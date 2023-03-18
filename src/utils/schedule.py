@@ -1,56 +1,69 @@
 import enum
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
+
+
+class Late(enum.Enum):
+    on_time = timedelta(seconds=1500)  # 25 minutes
+    half_late = timedelta(seconds=3600)  # 1 hour
+
+
+class LateTypes(enum.Enum):
+    on_time = "on_time"
+    half_late = "half_late"
+    late = "late"
+
+
+class Weekday(enum.Enum):
+    monday = 0
+    tuesday = 1
+    wednesday = 2
+    thursday = 3
+    friday = 4
+
+
+class FirstClassHalf(enum.Enum):
+    begin = time(17, 50)
+    end = time(20, 00)
+
+
+class SecondClassHalf(enum.Enum):
+    begin = time(20, 20)
+    end = time(22, 00)
 
 
 class CourseClass:
-    class Late(enum.Enum):
-        on_time = "on_time"
-        half_late = "half_late"
-        late = "late"
-
-    def __init__(self, weakday: int, start: time, end: time):
-        self.start = self.__start(start)
-        self.end = self.__end(end)
-        self.lenth = self.end - self.start
-        self.weekday = weakday
-
-    def __now(self) -> datetime:
-        return datetime.now()
-
-    def __start(self, start: time):
-        return datetime.combine(datetime.today(), start)
-
-    def __end(self, end: time):
-        return datetime.combine(datetime.today(), end)
+    def __init__(self, weekday: int, start: time, end: time):
+        self.start = datetime.combine(datetime.today(), start)
+        self.end = datetime.combine(datetime.today(), end)
+        self.weekday = weekday
 
     def is_ongoing(self) -> bool:
-        print(self.start, self.end)
-        if self.weekday == self.__now().weekday():
-            current_time = self.__now()
+        if self.weekday == datetime.now().weekday():
+            current_time = datetime.now()
             return self.start <= current_time <= self.end
         return False
 
     def is_late(self) -> Late:
-        pass
+        is_late = datetime.now() - self.start > Late.half_late.value
+        is_half_late = datetime.now() - self.start <= Late.half_late.value
+        is_on_time = datetime.now() - self.start <= Late.on_time.value
 
-    def is_absencent(self) -> bool:
+        if is_late:
+            return "atrasado"
+        elif is_half_late and not is_on_time:
+            return "meio atraso"
+        elif is_on_time:
+            return "sem atraso"
+
+    def is_absent(self) -> bool:
         return not self.is_ongoing()
 
 
 class Schedule:
-    def __init__(self) -> None:
-        self.classes_schedule = [
-            CourseClass(0, time(8, 20), time(12, 00)),  # Monday = 0 (morning)
-            CourseClass(0, time(13, 30), time(23, 00)),  # Monday = 0 (afretnoon)
-            CourseClass(1, time(8, 20), time(12, 00)),  # Tuesday = 1
-            CourseClass(2, time(8, 20), time(12, 00)),  # Wednesday = 2
-            CourseClass(3, time(8, 20), time(12, 00)),  # Thursday = 3
-            CourseClass(4, time(8, 20), time(12, 00)),  # Friday = 4
-            CourseClass(5, time(8, 20), time(12, 00)),  # Saturday = 5
-        ]
-
     def get_current_class(self) -> CourseClass | None:
-        for course_class in self.classes_schedule:
+        classes_schedule = self.CLASSES_SCHEDULE
+
+        for course_class in classes_schedule:
             if course_class.is_ongoing():
                 return course_class
 
