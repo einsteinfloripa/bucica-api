@@ -11,7 +11,6 @@ load_dotenv()
 SQLALCHEMY_DATABASE_URL = os.getenv("DB_URL", "")
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
-Base.metadata.create_all(bind=engine)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
