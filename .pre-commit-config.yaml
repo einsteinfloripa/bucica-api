@@ -44,5 +44,5 @@ repos:
             "--cov-fail-under=70",
           ]
         language: system
-        files: test_*.py
+        files: ^tests
         types: [python]
