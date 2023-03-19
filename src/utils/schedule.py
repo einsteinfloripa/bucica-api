@@ -3,38 +3,38 @@ from datetime import datetime, time, timedelta
 
 
 class Late(enum.Enum):
-    on_time = timedelta(seconds=1500)  # 25 minutes
-    half_late = timedelta(seconds=3600)  # 1 hour
+    ON_TIME = timedelta(seconds=1500)  # 25 minutes
+    HALF_LATE = timedelta(seconds=3600)  # 1 hour
 
 
 class LateTypes(enum.Enum):
-    on_time = "on_time"
-    half_late = "half_late"
-    late = "late"
+    ON_TIME = "sem atraso"
+    HALF_LATE = "meio atraso"
+    LATE = "atrasado"
 
 
 class Weekday(enum.Enum):
-    monday = 0
-    tuesday = 1
-    wednesday = 2
-    thursday = 3
-    friday = 4
+    MONDAY = 0
+    TUESDAY = 1
+    WEDNESDAY = 2
+    THURSDAY = 3
+    FRIDAY = 6
 
 
 class FirstClassHalf(enum.Enum):
-    begin = time(17, 50)
-    end = time(20, 00)
+    BEGIN = time(17, 50)
+    END = time(20, 00)
 
 
 class SecondClassHalf(enum.Enum):
-    begin = time(20, 20)
-    end = time(22, 00)
+    BEGIN = time(20, 20)
+    END = time(22, 00)
 
 
 class CourseClass:
-    def __init__(self, weekday: int, start: time, end: time):
-        self.start = datetime.combine(datetime.today(), start)
-        self.end = datetime.combine(datetime.today(), end)
+    def __init__(self, weekday: int, start_time: time, end_time: time):
+        self.start = datetime.combine(datetime.today(), start_time)
+        self.end = datetime.combine(datetime.today(), end_time)
         self.weekday = weekday
 
     def is_ongoing(self) -> bool:
@@ -43,23 +43,68 @@ class CourseClass:
             return self.start <= current_time <= self.end
         return False
 
-    def is_late(self) -> Late:
-        is_late = datetime.now() - self.start > Late.half_late.value
-        is_half_late = datetime.now() - self.start <= Late.half_late.value
-        is_on_time = datetime.now() - self.start <= Late.on_time.value
+    def is_late(self):
+        is_late = datetime.now() - self.start > Late.HALF_LATE.value
+        is_half_late = datetime.now() - self.start <= Late.HALF_LATE.value
+        is_on_time = datetime.now() - self.start <= Late.ON_TIME.value
 
         if is_late:
-            return "atrasado"
-        elif is_half_late and not is_on_time:
-            return "meio atraso"
-        elif is_on_time:
-            return "sem atraso"
+            return LateTypes.LATE
+
+        if is_half_late and not is_on_time:
+            return LateTypes.HALF_LATE
+
+        if is_on_time:
+            return LateTypes.ON_TIME
 
     def is_absent(self) -> bool:
         return not self.is_ongoing()
 
 
 class Schedule:
+    MONDAY = [
+        CourseClass(Weekday.MONDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value),
+        CourseClass(Weekday.MONDAY.value, SecondClassHalf.BEGIN.value, SecondClassHalf.END.value),
+    ]
+
+    THURSDAY = [
+        CourseClass(Weekday.THURSDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value),
+        CourseClass(
+            Weekday.THURSDAY.value,
+            SecondClassHalf.BEGIN.value,
+            SecondClassHalf.END.value,
+        ),
+    ]
+
+    WEDNESDAY = [
+        CourseClass(
+            Weekday.WEDNESDAY.value,
+            FirstClassHalf.BEGIN.value,
+            FirstClassHalf.END.value,
+        ),
+        CourseClass(
+            Weekday.WEDNESDAY.value,
+            SecondClassHalf.BEGIN.value,
+            SecondClassHalf.END.value,
+        ),
+    ]
+
+    TUESDAY = [
+        CourseClass(Weekday.TUESDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value),
+        CourseClass(
+            Weekday.TUESDAY.value,
+            SecondClassHalf.BEGIN.value,
+            SecondClassHalf.END.value,
+        ),
+    ]
+
+    FRIDAY = [
+        CourseClass(Weekday.FRIDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value),
+        CourseClass(Weekday.FRIDAY.value, SecondClassHalf.BEGIN.value, SecondClassHalf.END.value),
+    ]
+
+    CLASSES_SCHEDULE = MONDAY + THURSDAY + WEDNESDAY + TUESDAY + FRIDAY
+
     def get_current_class(self) -> CourseClass | None:
         classes_schedule = self.CLASSES_SCHEDULE
 

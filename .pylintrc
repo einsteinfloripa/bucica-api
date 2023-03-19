@@ -1,7 +1,8 @@
 [MASTER]
 init-hook='import sys; sys.path.append("src")'
 
-extension-pkg-whitelist=pydantic
+extension-pkg-whitelist=pydantic,pytest,sqlalchemy
+ignore=alembic
 
 disable=
     #  CONVENÇOES
@@ -17,6 +18,10 @@ disable=
     redefined-outer-name,
 
     unbalanced-tuple-unpacking,
+    too-many-arguments,
+    super-init-not-called
+
+
 
 
 [BASIC]
@@ -44,3 +49,5 @@ disable=
 
     # Modulos
     module-naming-style=snake_case
+
+    good-names=rg,db,id

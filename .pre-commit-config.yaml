@@ -8,6 +8,7 @@ repos:
         entry: black
         args: ["--check", "--diff"]
         language: system
+        exclude: ^alembic
         types: [python]
 
       - id: Pylint
@@ -21,12 +22,14 @@ repos:
             --fail-under=7,
           ]
         language: system
+        exclude: ^alembic
         types: [python]
 
       - id: Mypy
         name: Type Checking in Project
         entry: mypy
         args: ["--namespace-packages"]
+        exclude: ^alembic
         language: system
         types: [python]
 

@@ -1,99 +1,119 @@
+import datetime
+from unittest import mock
+
 import pytest
+from faker import Faker
+
+from src.models.students_model import CadastroAlunos, Presenca
+from src.services.students_service import StudentService
+from src.utils.schedule import LateTypes
+
+fake = Faker()
+
+
+def student_data():
+    aluno = CadastroAlunos(
+        name=fake.name(),
+        cpf="12345678900",
+        email=fake.email(),
+        birthdate=fake.date_of_birth(),
+        cep=fake.postcode(),
+        city=fake.city(),
+        state=fake.state(),
+        street=fake.street_name(),
+        number=fake.phone_number(),
+        civil_state=fake.random_element(elements=("Solteiro", "Casado")),
+        complement=fake.random_element(elements=("Casa", "Apartamento")),
+        neighborhood=fake.random_element(elements=("Centro", "Bairro")),
+        phone=fake.phone_number(),
+        rg=fake.random_element(elements=("12345678900", "12345678901")),
+    )
+
+    aluno.id = 1
+    return aluno
+
+
+def attendance_data():
+    presenca = Presenca(
+        student_id=1,
+        absence=False,
+        late=LateTypes.ON_TIME,
+    )
+
+    presenca.id = 1
+    return presenca
 
 
 class TestStudentService:
-    def test_student_not_found(self, mocker):
-        mocker.patch(
-            "src.services.students_service.StudentRepository",
-        )
-        mocker.patch(
-            "src.services.students_service.AttendanceRepository",
-        )
+    @mock.patch("src.services.students_service.StudentRepository.get_by_cpf", return_value=None)
+    def test_student_not_found(self, mock_get_by_cpf):
+        service = StudentService()
+        with pytest.raises(Exception) as app_exception:
+            service.add_attendance("12345678900")
 
-    # def test_create_attendance_check_returns_service_result_ok_with_correct_entry(
-    #     self, mocker
-    # ):
-    #     mocker.patch(
-    #         "src.services.studants_services.StudantRepository.get_studant",
-    #         return_value=self.test_studand,
-    #     )
-    #     mocker.patch(
-    #         "src.utils.schedule.Schedule.get_current_class",
-    #         return_value="SOME_CLASS_COURSE_OBJ",
-    #     )
-    #     mocker.patch(
-    #         "src.services.studants_services.StudantRepository.get_attendence",
-    #         return_value=None,
-    #     )
-    #     mocker.patch(
-    #         "src.services.studants_services.StudantRepository.create_attendence",
-    #         return_value="SUCESSFULLY_CREATED_ATTENDANCE_OBJ",
-    #     )
+        assert app_exception.type.__name__ == "StudentNotFound"
+        assert app_exception.value.message == "CPF do Aluno não encontrado"
+        assert app_exception.value.status_code == 404
 
-    #     expected = ServiceResult("SUCESSFULLY_CREATED_ATTENDANCE_OBJ")
-    #     output = self.tested_service.create_attendance_check("SOME_CPF_KEY")
-    #     assert output.value == expected.value
+    @mock.patch(
+        "src.services.students_service.StudentRepository.get_by_cpf",
+        return_value=student_data(),
+    )
+    @mock.patch("src.services.students_service.Schedule.get_current_class", return_value=None)
+    def test_ongoing_class_not_found(self, mock_get_by_cpf, mock_get_current_class):
+        service = StudentService()
 
-    # def test_create_attendance_check_returns_service_result_studant_not_found_on_invalid_entry(
-    #     self, mocker
-    # ):
-    #     mocker.patch(
-    #         "src.services.studants_services.StudantRepository.get_studant",
-    #         return_value=None,
-    #     )
-    #     output = self.tested_service.create_attendance_check("SOME_INVALID_CPF_KEY")
-    #     assert isinstance(output.value, AppException.StudentNotFound)
+        with pytest.raises(Exception) as app_exception:
+            service.add_attendance("12345678900")
 
-    # def test_create_attendance_check_returns_service_result_ongoing_class_not_found_on_invalid_entry(
-    #     self, mocker
-    # ):
-    #     mocker.patch(
-    #         "src.services.studants_services.StudantRepository.get_studant",
-    #         return_value=self.test_studand,
-    #     )
-    #     mocker.patch(
-    #         "src.services.studants_services.Schedule.get_current_class",
-    #         return_value=None,
-    #     )
-    #     output = self.tested_service.create_attendance_check("SOME_CPF_KEY")
-    #     assert isinstance(output.value, AppException.OngoingClassNotFound)
+        assert app_exception.type.__name__ == "NotOngoingLesson"
+        assert app_exception.value.message == "Não há aula em andamento"
+        assert app_exception.value.status_code == 400
 
-    # def test_create_attendance_check_returns_service_result_attendance_already_confirmed(
-    #     self, mocker
-    # ):
-    #     mocker.patch(
-    #         "src.services.studants_services.StudantRepository.get_studant",
-    #         return_value=self.test_studand,
-    #     )
-    #     mocker.patch(
-    #         "src.utils.schedule.Schedule.get_current_class",
-    #         return_value="SOME_CLASS_COURSE_OBJ",
-    #     )
-    #     mocker.patch(
-    #         "src.services.studants_services.StudantRepository.get_attendence",
-    #         return_value="ALREADY_CREATED_ATTENDANCE_OBJ",
-    #     )
-    #     output = self.tested_service.create_attendance_check("SOME_CPF_KEY")
-    #     assert isinstance(output.value, AppException.AttendanceAlreadyComfimed)
+    @mock.patch(
+        "src.services.students_service.StudentRepository.get_by_cpf",
+        return_value=student_data(),
+    )
+    @mock.patch("src.services.students_service.Schedule.get_current_class", return_value="class")
+    @mock.patch(
+        "src.services.students_service.AttendanceRepository.get_attendance_by_student_id",
+        return_value=attendance_data(),
+    )
+    def test_attendance_already_confirmed(
+        self, mock_get_by_cpf, mock_get_current_class, mock_get_attendance_by_student_id
+    ):
+        service = StudentService()
 
-    # ### ServiceResult.get_stutant ###
-    # def test_get_student_returns_service_result_ok_with_correct_entry(self, mocker):
-    #     mocker.patch(
-    #         "src.services.studants_services.StudantRepository.get_studant",
-    #         return_value="TEST_VALUE",
-    #     )
-    #     entry = "TEST_VALUE"
-    #     expected = ServiceResult(entry)
-    #     output = self.tested_service.get_student(entry)
+        with pytest.raises(Exception) as app_exception:
+            service.add_attendance("12345678900")
+        assert app_exception.type.__name__ == "AttendanceAlreadyConfirmed"
+        assert app_exception.value.message == "Presença já confirmada"
+        assert app_exception.value.status_code == 400
 
-    #     assert expected.value == output.value
+    @mock.patch(
+        "src.services.students_service.StudentRepository.get_by_cpf",
+        return_value=student_data(),
+    )
+    @mock.patch("src.services.students_service.Schedule.get_current_class", return_value="class")
+    @mock.patch(
+        "src.services.students_service.AttendanceRepository.get_attendance_by_student_id",
+        return_value=None,
+    )
+    @mock.patch(
+        "src.services.students_service.AttendanceRepository.create_attendance",
+        return_value=None,
+    )
+    def test_add_attendance(
+        self,
+        mock_get_by_cpf,
+        mock_get_current_class,
+        mock_get_attendance_by_student_id,
+        mock_create_attendance,
+    ):
+        service = StudentService()
+        service.add_attendance("12345678900")
 
-    # def test_get_studant_return_service_result_error_with_invalid_entry(self, mocker):
-    #     mocker.patch(
-    #         "src.services.studants_services.StudantRepository.get_studant",
-    #         return_value=None,
-    #     )
-    #     entry = None
-    #     output = self.tested_service.get_student(entry)
-
-    #     assert isinstance(output.value, AppException.StudentNotFound)
+        assert mock_get_by_cpf.called
+        assert mock_get_current_class.called
+        assert mock_get_attendance_by_student_id.called
+        assert mock_create_attendance.called

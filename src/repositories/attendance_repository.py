@@ -6,14 +6,11 @@ from src.utils.schedule import CourseClass
 
 
 class AttendanceRepository(AppRepository):
-    def create_attendance(
-        self, student_id: int, current_class: CourseClass
-    ) -> Presenca:
+    def create_attendance(self, student_id: int, current_class: CourseClass) -> Presenca:
         created_item = Presenca(
             student_id=student_id,
-            datetime_of_creation=datetime.now(),
             late=current_class.is_late(),
-            absence=False,
+            absence=current_class.is_absent(),
         )
 
         self.db.add(created_item)
@@ -27,7 +24,7 @@ class AttendanceRepository(AppRepository):
             self.db.query(Presenca)
             .filter(
                 Presenca.student_id == student_id,
-                Presenca.datetime == datetime.now().date,
+                Presenca.created_at == datetime.now().date(),
             )
             .first()
         )

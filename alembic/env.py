@@ -1,17 +1,20 @@
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
+from src.database.session import SQLALCHEMY_DATABASE_URL, engine
 from src.models.base_model import Base
 from src.models.students_model import CadastroAlunos, Presenca
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
+
+
+Base.metadata.create_all(bind=engine)
 config = context.config
-config.set_main_option(
-    "sqlalchemy.url", "postgresql://postgres:postgres@localhost:5432/postgres"
-)
+config.set_main_option("sqlalchemy.url", SQLALCHEMY_DATABASE_URL)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
