@@ -72,7 +72,8 @@ class Presenca(Base):
     student_id: Mapped[int] = mapped_column(ForeignKey("Cadastro_Alunos.id"), name="aluno_id")
     late: Mapped[LateTypes] = mapped_column(name="atraso")
     absence: Mapped[bool] = mapped_column(name="falta")
-    created_at: Mapped[date] = mapped_column(name="criado_em", default=datetime.now().date())
+    created_at: Mapped[datetime] = mapped_column(name="criado_em", default=datetime.now())
+    first_half: Mapped[bool] = mapped_column(name="primeira_metade")
 
     students = relationship("CadastroAlunos", back_populates="presencas")
 
@@ -81,22 +82,24 @@ class Presenca(Base):
         student_id: int,
         late: LateTypes,
         absence: bool,
-        created_at: date = datetime.now().date(),
+        first_half: bool,
+        created_at: datetime = datetime.now(),
     ):
         self.student_id = student_id
         self.late = late
         self.absence = absence
         self.created_at = created_at
+        self.first_half = first_half
 
     def __repr__(self):
-        return f"Presenca(id={self.id}, student_id={self.student_id}, late={self.late}, absence={self.absence}, created_at={self.created_at})"
+        return f"Presenca(id={self.id}, student_id={self.student_id}, late={self.late}, absence={self.absence}, created_at={self.created_at}, first_half={self.first_half})"
 
 
 class CadastroAlunosTypedDict(TypedDict):
     id: int
     name: str
     phone: str
-    birthdate: date
+    birthdate: datetime
     rg: str
     cpf: str
     civil_state: str

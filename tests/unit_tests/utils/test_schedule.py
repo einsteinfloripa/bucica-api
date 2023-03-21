@@ -8,6 +8,7 @@ from src.utils.schedule import (
     CourseClass,
     FirstClassHalf,
     LateTypes,
+    Schedule,
     SecondClassHalf,
     Weekday,
 )
@@ -118,7 +119,101 @@ class TestCourseClass:
             course_class = CourseClass(Weekday.MONDAY.value, start, end)
             assert course_class.is_late() == expected
 
+    @pytest.mark.parametrize(
+        "mocked_function_return, expected",
+        [
+            (True, False),
+            (False, True),
+        ],
+    )
+    def test_is_absent(self, mocked_function_return: bool, expected: bool):
+        with mock.patch(
+            "src.utils.schedule.CourseClass.is_ongoing", return_value=mocked_function_return
+        ):
+            course_class = CourseClass(
+                Weekday.MONDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value
+            )
+            assert course_class.is_absent() == expected
 
-# TODO: implement tests for Schedule class
+
 class TestSchedule:
-    pass
+    schedule = Schedule()
+
+    def test_get_current_class_when_is_ongoing_is_none(self):
+        with mock.patch(
+            "src.utils.schedule.CourseClass.is_ongoing",
+            return_value=False,
+        ):
+            current_class = self.schedule.get_current_class()
+            assert current_class is None
+
+    @pytest.mark.parametrize(
+        "mocked_function_return, weekday, start, end",
+        [
+            ([True], Weekday.MONDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value),
+            (
+                [False, True],
+                Weekday.MONDAY.value,
+                SecondClassHalf.BEGIN.value,
+                SecondClassHalf.END.value,
+            ),
+            (
+                [False, False, True],
+                Weekday.TUESDAY.value,
+                FirstClassHalf.BEGIN.value,
+                FirstClassHalf.END.value,
+            ),
+            (
+                [False, False, False, True],
+                Weekday.TUESDAY.value,
+                SecondClassHalf.BEGIN.value,
+                SecondClassHalf.END.value,
+            ),
+            (
+                [False, False, False, False, True],
+                Weekday.WEDNESDAY.value,
+                FirstClassHalf.BEGIN.value,
+                FirstClassHalf.END.value,
+            ),
+            (
+                [False, False, False, False, False, True],
+                Weekday.WEDNESDAY.value,
+                SecondClassHalf.BEGIN.value,
+                SecondClassHalf.END.value,
+            ),
+            (
+                [False, False, False, False, False, False, True],
+                Weekday.THURSDAY.value,
+                FirstClassHalf.BEGIN.value,
+                FirstClassHalf.END.value,
+            ),
+            (
+                [False, False, False, False, False, False, False, True],
+                Weekday.THURSDAY.value,
+                SecondClassHalf.BEGIN.value,
+                SecondClassHalf.END.value,
+            ),
+            (
+                [False, False, False, False, False, False, False, False, True],
+                Weekday.FRIDAY.value,
+                FirstClassHalf.BEGIN.value,
+                FirstClassHalf.END.value,
+            ),
+            (
+                [False, False, False, False, False, False, False, False, False, True],
+                Weekday.FRIDAY.value,
+                SecondClassHalf.BEGIN.value,
+                SecondClassHalf.END.value,
+            ),
+        ],
+    )
+    def test_get_current_class_with_mocked_values(
+        self, mocked_function_return, start, end, weekday
+    ):
+        with mock.patch(
+            "src.utils.schedule.CourseClass.is_ongoing", side_effect=mocked_function_return
+        ):
+            current_class = self.schedule.get_current_class()
+            assert current_class.weekday == weekday
+            assert current_class.start.time() == start
+            assert current_class.end.time() == end

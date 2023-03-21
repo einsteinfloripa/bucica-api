@@ -18,7 +18,7 @@ class Weekday(enum.Enum):
     TUESDAY = 1
     WEDNESDAY = 2
     THURSDAY = 3
-    FRIDAY = 6
+    FRIDAY = 4
 
 
 class FirstClassHalf(enum.Enum):
@@ -36,6 +36,9 @@ class CourseClass:
         self.start = datetime.combine(datetime.today(), start_time)
         self.end = datetime.combine(datetime.today(), end_time)
         self.weekday = weekday
+
+    def is_first_half(self) -> bool:
+        return self.start == FirstClassHalf.BEGIN.value
 
     def is_ongoing(self) -> bool:
         if self.weekday == datetime.now().weekday():
@@ -59,6 +62,9 @@ class CourseClass:
 
     def is_absent(self) -> bool:
         return not self.is_ongoing()
+
+    def __repr__(self) -> str:
+        return f"CourseClass({self.weekday}, {self.start}, {self.end})"
 
 
 class Schedule:
@@ -103,11 +109,10 @@ class Schedule:
         CourseClass(Weekday.FRIDAY.value, SecondClassHalf.BEGIN.value, SecondClassHalf.END.value),
     ]
 
-    CLASSES_SCHEDULE = MONDAY + THURSDAY + WEDNESDAY + TUESDAY + FRIDAY
+    CLASSES_SCHEDULE = MONDAY + TUESDAY + WEDNESDAY + THURSDAY + FRIDAY
 
     def get_current_class(self) -> CourseClass | None:
         classes_schedule = self.CLASSES_SCHEDULE
-
         for course_class in classes_schedule:
             if course_class.is_ongoing():
                 return course_class

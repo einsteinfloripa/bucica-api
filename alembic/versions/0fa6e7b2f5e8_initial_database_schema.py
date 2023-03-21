@@ -43,7 +43,7 @@ def upgrade() -> None:
     sa.Column('datetime_of_creation', sa.DateTime(), nullable=True),
     sa.Column('late', sa.Enum('on_time', 'half_late', 'late', name='late'), nullable=True),
     sa.Column('absence', sa.Boolean(), nullable=True),
-    sa.ForeignKeyConstraint(['student_id'], ['Cadastro_Alunos.id'], ),
+    sa.ForeignKeyConstraint(['student_id'], ['Cadastro_Alunos.id']),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

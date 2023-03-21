@@ -6,7 +6,7 @@ from faker import Faker
 
 from src.models.students_model import CadastroAlunos, Presenca
 from src.services.students_service import StudentService
-from src.utils.schedule import LateTypes
+from src.utils.schedule import CourseClass, FirstClassHalf, LateTypes
 
 fake = Faker()
 
@@ -38,10 +38,21 @@ def attendance_data():
         student_id=1,
         absence=False,
         late=LateTypes.ON_TIME,
+        first_half=True,
     )
 
     presenca.id = 1
     return presenca
+
+
+def course_class_data():
+    course_class = CourseClass(
+        weekday=1,
+        start_time=FirstClassHalf.BEGIN.value,
+        end_time=FirstClassHalf.END.value,
+    )
+    course_class.id = 1
+    return course_class
 
 
 class TestStudentService:
@@ -74,13 +85,15 @@ class TestStudentService:
         "src.services.students_service.StudentRepository.get_by_cpf",
         return_value=student_data(),
     )
-    @mock.patch("src.services.students_service.Schedule.get_current_class", return_value="class")
     @mock.patch(
-        "src.services.students_service.AttendanceRepository.get_attendance_by_student_id",
+        "src.services.students_service.Schedule.get_current_class", return_value=course_class_data()
+    )
+    @mock.patch(
+        "src.services.students_service.AttendanceRepository.get_first",
         return_value=attendance_data(),
     )
     def test_attendance_already_confirmed(
-        self, mock_get_by_cpf, mock_get_current_class, mock_get_attendance_by_student_id
+        self, mock_get_by_cpf, mock_get_current_class, mock_get_first
     ):
         service = StudentService()
 
@@ -94,9 +107,12 @@ class TestStudentService:
         "src.services.students_service.StudentRepository.get_by_cpf",
         return_value=student_data(),
     )
-    @mock.patch("src.services.students_service.Schedule.get_current_class", return_value="class")
     @mock.patch(
-        "src.services.students_service.AttendanceRepository.get_attendance_by_student_id",
+        "src.services.students_service.Schedule.get_current_class",
+        return_value=course_class_data(),
+    )
+    @mock.patch(
+        "src.services.students_service.AttendanceRepository.get_first",
         return_value=None,
     )
     @mock.patch(
@@ -107,7 +123,7 @@ class TestStudentService:
         self,
         mock_get_by_cpf,
         mock_get_current_class,
-        mock_get_attendance_by_student_id,
+        mock_get_first,
         mock_create_attendance,
     ):
         service = StudentService()
@@ -115,5 +131,5 @@ class TestStudentService:
 
         assert mock_get_by_cpf.called
         assert mock_get_current_class.called
-        assert mock_get_attendance_by_student_id.called
+        assert mock_get_first.called
         assert mock_create_attendance.called
