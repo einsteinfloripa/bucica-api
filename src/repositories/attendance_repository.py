@@ -22,14 +22,3 @@ class AttendanceRepository(AppRepository):
 
     def get_first(self, **kwargs) -> Presenca | None:
         return super().get_first(**kwargs.update({"object": Presenca}))
-
-    # def get_attendance_by_student_id(self, student_id: int) -> Presenca | None:
-    #    return (
-    #        self.db.query(Presenca)
-    #        .filter(
-    #            Presenca.student_id == student_id,
-    #            Presenca.created_at == datetime.now().date(),
-    #            Presenca.first_half ==
-    #        )
-    #        .first()
-    #    )

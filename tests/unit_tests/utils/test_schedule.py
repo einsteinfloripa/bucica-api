@@ -137,15 +137,13 @@ class TestCourseClass:
 
 
 class TestSchedule:
-    schedule = Schedule()
-
-    def test_get_current_class_when_is_ongoing_is_none(self):
-        with mock.patch(
-            "src.utils.schedule.CourseClass.is_ongoing",
-            return_value=False,
-        ):
-            current_class = self.schedule.get_current_class()
-            assert current_class is None
+    @mock.patch(
+        "src.utils.schedule.CourseClass.is_ongoing",
+        return_value=False,
+    )
+    def test_get_current_class_when_is_ongoing_is_none(self, mocked_func):
+        current_class = Schedule().get_current_class()
+        assert current_class is None
 
     @pytest.mark.parametrize(
         "mocked_function_return, weekday, start, end",
@@ -213,7 +211,7 @@ class TestSchedule:
         with mock.patch(
             "src.utils.schedule.CourseClass.is_ongoing", side_effect=mocked_function_return
         ):
-            current_class = self.schedule.get_current_class()
-            assert current_class.weekday == weekday
-            assert current_class.start.time() == start
-            assert current_class.end.time() == end
+            current_class = Schedule().get_current_class()
+        assert current_class.weekday == weekday
+        assert current_class.start.time() == start
+        assert current_class.end.time() == end

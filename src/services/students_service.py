@@ -17,7 +17,7 @@ class StudentService(AppService):
     def add_attendance(self, cpf_key: str):
         student = self.student_repository.get_by_cpf(cpf_key)
         if student is None:
-            raise StudentNotFound(message="CPF do Aluno não encontrado")
+            raise StudentNotFound("CPF do Aluno não encontrado")
 
         current_class = self.schedule.get_current_class()
         if current_class is None:
