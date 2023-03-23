@@ -1,15 +1,15 @@
-name: CI(PR Lint)
+name: Lint PR
+
 on:
   pull_request:
     branches:
       - main
       - develop
-
 jobs:
-  pr_lint:
-    name: PR Lint
+  main:
+    name: Valida título da PR
     runs-on: ubuntu-latest
     steps:
-      - uses: vijaykramesh/pr-lint-action@v1.0
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: amannn/action-semantic-pull-request@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

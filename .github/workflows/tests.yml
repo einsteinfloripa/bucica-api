@@ -10,6 +10,8 @@ jobs:
   tests-unit:
     name: Unit Tests
     runs-on: ubuntu-22.04
+    env:
+      DB_URL: "sqlite:///test.db"
     steps:
       - uses: actions/checkout@v3
 
