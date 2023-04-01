@@ -14,7 +14,7 @@ class AppRepository(DBSessionMixin):
         example: object=User -> will query the User table
         """
         obj = kwargs.pop("object")
-        self.db.query(obj).filter_by(**kwargs).first()
+        return self.db.query(obj).filter_by(**kwargs).first()
 
     def get(self, **kwargs) -> List[Any] | None:
         """
@@ -26,4 +26,4 @@ class AppRepository(DBSessionMixin):
         example: object=User -> will query the User table
         """
         obj = kwargs.pop("object")
-        self.db.query(obj).filter_by(**kwargs).all()
+        return self.db.query(obj).filter_by(**kwargs).all()

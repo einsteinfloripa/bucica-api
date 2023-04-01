@@ -1,7 +1,21 @@
-FROM fnndsc/python-poetry:latest
+FROM python:3.10-alpine3.17
 
 WORKDIR /app
 
-COPY . .
+COPY poetry.lock pyproject.toml ./
 
-RUN poetry install
+# Upgrade pip
+RUN pip install --upgrade pip
+
+# Install Poetry
+RUN pip install poetry
+
+# Install libpq-dev
+RUN apk add gcc musl-dev postgresql-dev libpq
+
+RUN poetry config virtualenvs.create false
+
+RUN poetry install --no-root --only main
+
+# Copy source code
+COPY . .
