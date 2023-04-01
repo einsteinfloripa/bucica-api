@@ -12,11 +12,11 @@ services:
       context: ../..
       dockerfile: docker/staging/Dockerfile
     depends_on:
-      - bucica-postgres-db
+      - bucica-postgres-db-staging
     networks:
       - bucica-network-staging
     command: sh -c "poetry run alembic upgrade head && poetry run uvicorn --host 0.0.0.0 --port ${PORT} src.main:app"
-  bucica-postgres-db:
+  bucica-postgres-db-staging:
     container_name: bucica-postgres-db-staging
     image: postgres:12.2-alpine
     ports:
