@@ -11,8 +11,6 @@ from src.models.students_model import CadastroAlunos, Presenca
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 
-
-Base.metadata.create_all(bind=engine)
 config = context.config
 config.set_main_option("sqlalchemy.url", SQLALCHEMY_DATABASE_URL)
 

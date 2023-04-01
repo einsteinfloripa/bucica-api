@@ -3,20 +3,20 @@
 all:	build-image
 
 dev: ## Start Application in Development mode
-	@poetry run uvicorn src.main:app --reload --env-file .env
+	@poetry run uvicorn --reload --env-file .env src.main:app
 
 deploy-staging: ## Deploy to Staging
-	@docker compose -f docker/staging/docker-compose.yml --env-file .env.staging build --no-cache --pull
+	@docker compose -f docker/staging/docker-compose.yml --env-file .env.staging build --pull
 	@docker compose -f docker/staging/docker-compose.yml --env-file .env.staging up -d
 	@docker image prune -f
 
 deploy-production: ## Deploy to Production
-	@docker compose -f docker/production/docker-compose.yml --env-file .env.production build --no-cache --pull
+	@docker compose -f docker/production/docker-compose.yml --env-file .env.production build --pull
 	@docker compose -f docker/production/docker-compose.yml --env-file .env.production up -d
 	@docker image prune -f
 
 deploy-nginx: ## Deploy Nginx
-	@docker compose -f docker/nginx/docker-compose.yml build --no-cache --pull
+	@docker compose -f docker/nginx/docker-compose.yml build --pull
 	@docker compose -f docker/nginx/docker-compose.yml up -d
 	@docker image prune -f
 

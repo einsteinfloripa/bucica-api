@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from src.models.students_model import Presenca
 from src.repositories.base_repository import AppRepository
 from src.utils.schedule import CourseClass
@@ -15,10 +13,11 @@ class AttendanceRepository(AppRepository):
         )
 
         self.db.add(created_item)
+
         self.db.commit()
         self.db.refresh(created_item)
 
         return created_item
 
     def get_first(self, **kwargs) -> Presenca | None:
-        return super().get_first(**kwargs.update({"object": Presenca}))
+        return super().get_first(**kwargs.update({"object": Presenca}))  # type: ignore
