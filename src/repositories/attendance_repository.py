@@ -19,5 +19,6 @@ class AttendanceRepository(AppRepository):
 
         return created_item
 
-    def get_first(self, **kwargs) -> Presenca | None:
-        return super().get_first(**kwargs.update({"object": Presenca}))  # type: ignore
+    def get_first_with(self, **kwargs) -> Presenca | None:
+        kwargs["object"] = Presenca
+        return super().get_first(**kwargs)  # type: ignore
