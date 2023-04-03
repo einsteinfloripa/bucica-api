@@ -24,7 +24,7 @@ class StudentService(AppService):
             raise NotOngoingLesson("Não há aula em andamento")
 
         attendance = self.attendance_repository.get_first_with(
-            studant_id=student.id, first_half=current_class.is_first_half()
+            student_id=student.id, first_half=current_class.is_first_half()
         )
         if attendance is not None:
             raise AttendanceAlreadyConfirmed("Presença já confirmada")
