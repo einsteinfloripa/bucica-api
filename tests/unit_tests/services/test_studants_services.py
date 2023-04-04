@@ -89,7 +89,7 @@ class TestStudentService:
         "src.services.students_service.Schedule.get_current_class", return_value=course_class_data()
     )
     @mock.patch(
-        "src.services.students_service.AttendanceRepository.get_first",
+        "src.services.students_service.AttendanceRepository.get_first_with",
         return_value=attendance_data(),
     )
     def test_attendance_already_confirmed(
@@ -112,7 +112,7 @@ class TestStudentService:
         return_value=course_class_data(),
     )
     @mock.patch(
-        "src.services.students_service.AttendanceRepository.get_first",
+        "src.services.students_service.AttendanceRepository.get_first_with",
         return_value=None,
     )
     @mock.patch(
