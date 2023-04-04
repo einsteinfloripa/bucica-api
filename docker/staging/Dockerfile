@@ -4,8 +4,6 @@ WORKDIR /app
 
 # Setup timezone with host timezone
 ENV TZ=America/Sao_Paulo
-RUN apk add --no-cache tzdata
-
 
 # Install libpq-dev
 RUN apk add gcc musl-dev postgresql-dev libpq

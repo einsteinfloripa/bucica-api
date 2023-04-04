@@ -7,17 +7,17 @@ dev: ## Start Application in Development mode
 
 deploy-staging: ## Deploy to Staging
 	@docker compose -f docker/staging/docker-compose.yml --env-file .env.staging build --pull
-	@docker compose -f docker/staging/docker-compose.yml --env-file .env.staging up -d
+	@docker compose -f docker/staging/docker-compose.yml --env-file .env.staging up -d --force-recreate
 	@docker image prune -f
 
 deploy-production: ## Deploy to Production
 	@docker compose -f docker/production/docker-compose.yml --env-file .env.production build --pull
-	@docker compose -f docker/production/docker-compose.yml --env-file .env.production up -d
+	@docker compose -f docker/production/docker-compose.yml --env-file .env.production up -d --force-recreate
 	@docker image prune -f
 
 deploy-nginx: ## Deploy Nginx
 	@docker compose -f docker/nginx/docker-compose.yml build --pull
-	@docker compose -f docker/nginx/docker-compose.yml up -d
+	@docker compose -f docker/nginx/docker-compose.yml up -d --force-recreate
 	@docker image prune -f
 
 help: ## Show this help.
