@@ -1,14 +1,19 @@
 from typing import Any, List
 
-from src.database.session import DBSessionMixin
+from fastapi import Depends
+
+from src.database.session import get_db
 
 
-class AppRepository(DBSessionMixin):
+class AppRepository:
+    def __init__(self, db=Depends(get_db)):
+        self.db = db
+
     def get_first(self, **kwargs) -> Any | None:
         """
         Get first object from database using the specified kwargs as filters
 
-        The object kwarg is required to specify wich object/table to query
+        The object kwarg is required to specify which object/table to query
         this kwarg accepts a sqlalchemy mapped class as value
 
         example: object=User -> will query the User table
@@ -20,7 +25,7 @@ class AppRepository(DBSessionMixin):
         """
         Get all objects from database using the specified kwargs as filters
 
-        The object kwarg is required to specify wich object/table to query
+        The object kwarg is required to specify which object/table to query
         this kwarg accepts a sqlalchemy mapped class as value
 
         example: object=User -> will query the User table

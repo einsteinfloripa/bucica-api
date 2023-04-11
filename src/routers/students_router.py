@@ -10,8 +10,6 @@ from src.services.students_service import StudentService
 router = APIRouter(prefix="/presenca")
 
 
-service = StudentService()
-
 security = HTTPBasic()
 username = os.getenv("ADMIN_USERNAME")
 password = os.getenv("ADMIN_PASSWORD")
@@ -19,7 +17,9 @@ password = os.getenv("ADMIN_PASSWORD")
 
 @router.post("/{cpf_number}", name="Adicionar presença")
 def add_attendance(
-    cpf_number: str, credentials: Annotated[HTTPBasicCredentials, Depends(security)]
+    cpf_number: str,
+    credentials: Annotated[HTTPBasicCredentials, Depends(security)],
+    service: StudentService = Depends(StudentService),
 ):
     if credentials.username != username or credentials.password != password:
         raise NotAuthorized("Usuário ou senha inválidos")

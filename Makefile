@@ -1,9 +1,11 @@
+include .env
+
 .PHONY:	all build-dev-images
 
 all:	build-image
 
 dev: ## Start Application in Development mode
-	@poetry run uvicorn --reload --env-file .env src.main:app
+	@poetry run uvicorn --port ${PORT} --host 0.0.0.0 --reload --env-file .env src.main:app
 
 deploy-staging: ## Deploy to Staging
 	@docker compose -f docker/staging/docker-compose.yml --env-file .env.staging build --pull
