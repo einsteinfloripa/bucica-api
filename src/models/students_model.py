@@ -14,7 +14,6 @@ class CadastroAlunos(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(name="nome")
     phone: Mapped[str] = mapped_column(name="telefone")
-    birthdate: Mapped[date] = mapped_column(name="data_nascimento")
     rg: Mapped[str] = mapped_column(name="rg")
     cpf: Mapped[str] = mapped_column(name="cpf", unique=True)
     civil_state: Mapped[str] = mapped_column(name="estado_civil")
@@ -33,7 +32,6 @@ class CadastroAlunos(Base):
         self,
         name: str,
         phone: str,
-        birthdate: date,
         rg: str,
         cpf: str,
         civil_state: str,
@@ -48,7 +46,6 @@ class CadastroAlunos(Base):
     ):
         self.name = name
         self.phone = phone
-        self.birthdate = birthdate
         self.rg = rg
         self.cpf = cpf
         self.civil_state = civil_state

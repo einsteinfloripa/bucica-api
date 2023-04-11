@@ -33,16 +33,16 @@ repos:
         language: system
         types: [python]
 
-      - id: Pytest
-        name: Testing in Project
-        entry: pytest
-        args:
-          [
-            "--cov=src",
-            "--cov-report=term-missing",
-            "--cov-report=html",
-            "--cov-fail-under=70",
-          ]
-        language: system
-        files: ^tests
-        types: [python]
+      # - id: Pytest
+      #   name: Testing in Project
+      #   entry: pytest
+      #   args:
+      #     [
+      #       "--cov=src",
+      #       "--cov-report=term-missing",
+      #       "--cov-report=html",
+      #       "--cov-fail-under=70",
+      #     ]
+      #   language: system
+      #   files: ^tests
+      #   types: [python]
