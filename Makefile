@@ -1,4 +1,7 @@
+ifneq ("$(wildcard .env)","")
 include .env
+endif
+
 
 .PHONY:	all build-dev-images
 
