@@ -16,7 +16,6 @@ def student_data():
         name=fake.name(),
         cpf="12345678900",
         email=fake.email(),
-        birthdate=fake.date_of_birth(),
         cep=fake.postcode(),
         city=fake.city(),
         state=fake.state(),
