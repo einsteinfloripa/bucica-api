@@ -35,6 +35,7 @@ class TestCourseClass:
 
         assert course_class.is_ongoing() == expected
 
+    @pytest.mark.outro
     @pytest.mark.parametrize(
         "mocked_time, start, end, expected",
         [

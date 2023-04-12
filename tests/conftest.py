@@ -37,8 +37,13 @@ def reset_db(db_context):
     # Base.metadata.clear() FIXME: not working
 
 
+class SeedData():
+    def __init__(self, student: CadastroAlunos, attendances: list[Presenca]):
+        self.student = student
+        self.attendances = attendances
+
 @pytest.fixture(scope="function")
-def seed_db(db_context: DbContext):
+def seed_db_data(db_context: DbContext):
     """Seed database with test data."""
     student = CadastroAlunos(
         name="El Dog Bucica",
@@ -83,13 +88,13 @@ def seed_db(db_context: DbContext):
     db_context.session.add(student)
     db_context.session.add_all(attendances)
     db_context.session.commit()
-    yield
+    yield SeedData(student, attendances)
     db_context.session.delete(student)
     for attendance in attendances:
         db_context.session.delete(attendance)
     db_context.session.commit()
-
-
+    
+ 
 ###
 
 
