@@ -3,8 +3,8 @@ from datetime import datetime, time, timedelta
 
 
 class Late(enum.Enum):
-    ON_TIME = timedelta(seconds=1500)  # 25 minutes
-    HALF_LATE = timedelta(seconds=3600)  # 1 hour
+    ON_TIME = timedelta(seconds=1800)  # 25 minutes
+    HALF_LATE = timedelta(seconds=3900)  # 1 hour
 
 
 class LateTypes(enum.Enum):
