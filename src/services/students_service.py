@@ -25,7 +25,10 @@ class StudentService:
 
         current_class = self.schedule.get_current_class()
         if current_class is None:
-            raise NotOngoingLesson("Não há aula em andamento")
+            raise NotOngoingLesson(
+                "Não há aula em andamento. As presenças só podem ser \
+                registradas nos intervalo entre 17:45 até 20:00 e 20:15 até 22:00"
+            )
 
         attendance = self.attendance_repository.get_first_with(
             student_id=student.id, first_half=current_class.is_first_half()
