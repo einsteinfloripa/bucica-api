@@ -20,6 +20,18 @@ class AppRepository:
         """
         obj = kwargs.pop("object")
         return self.db.query(obj).filter_by(**kwargs).first()
+    
+    def get_last(self, **kwargs) -> Any | None:
+        """
+        Get last object from database using the specified kwargs as filters
+
+        The object kwarg is required to specify which object/table to query
+        this kwarg accepts a sqlalchemy mapped class as value
+
+        example: object=User -> will query the User table
+        """
+        obj = kwargs.pop("object")
+        return self.db.query(obj).filter_by(**kwargs).order_by(obj.id.desc()).first()
 
     def get(self, **kwargs) -> List[Any] | None:
         """

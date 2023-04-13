@@ -1,7 +1,7 @@
-from datetime import date, datetime
+from datetime import datetime
 from typing import TypedDict
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base_model import Base
@@ -58,9 +58,6 @@ class CadastroAlunos(Base):
         self.cep = cep
         self.email = email
 
-    def __repr__(self):
-        return f"CadastroAlunos(id={self.id}, name={self.name}, phone={self.phone}, birthdate={self.birthdate}, rg={self.rg}, cpf={self.cpf}, civil_state={self.civil_state}, state={self.state}, city={self.city}, neighborhood={self.neighborhood}, street={self.street}, number={self.number}, complement={self.complement}, cep={self.cep}, email={self.email})"
-
 
 class Presenca(Base):
     __tablename__ = "Presenca"
@@ -69,7 +66,7 @@ class Presenca(Base):
     student_id: Mapped[int] = mapped_column(ForeignKey("Cadastro_Alunos.id"), name="aluno_id")
     late: Mapped[LateTypes] = mapped_column(name="atraso")
     absence: Mapped[bool] = mapped_column(name="falta")
-    created_at: Mapped[datetime] = mapped_column(name="criado_em", default=datetime.now())
+    created_at: Mapped[datetime] = mapped_column(name="criado_em")
     first_half: Mapped[bool] = mapped_column(name="primeira_metade")
 
     students = relationship("CadastroAlunos", back_populates="presencas")
@@ -85,8 +82,8 @@ class Presenca(Base):
         self.student_id = student_id
         self.late = late
         self.absence = absence
-        self.created_at = created_at
         self.first_half = first_half
+        self.created_at = created_at
 
     def __repr__(self):
         return f"Presenca(id={self.id}, student_id={self.student_id}, late={self.late}, absence={self.absence}, created_at={self.created_at}, first_half={self.first_half})"

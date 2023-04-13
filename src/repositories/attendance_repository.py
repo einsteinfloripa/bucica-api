@@ -1,6 +1,4 @@
-from fastapi import Depends
 
-from src.database.session import get_db
 from src.models.students_model import Presenca
 from src.repositories.base_repository import AppRepository
 from src.utils.schedule import CourseClass
@@ -21,5 +19,5 @@ class AttendanceRepository(AppRepository):
 
         return created_item
 
-    def get_first_with(self, **kwargs) -> Presenca | None:
-        return self.get_first(object=Presenca, **kwargs)
+    def get_last_with(self, **kwargs) -> Presenca | None:
+        return self.get_last(object=Presenca, **kwargs)
