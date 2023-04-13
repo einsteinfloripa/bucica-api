@@ -37,6 +37,7 @@ class CourseClass:
         self.end = datetime.combine(datetime.today(), end_time)
         self.weekday = weekday
 
+
     def is_first_half(self) -> bool:
         return self.start.time() == FirstClassHalf.BEGIN.value
 
