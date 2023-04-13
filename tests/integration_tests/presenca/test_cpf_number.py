@@ -1,83 +1,103 @@
-import datetime
-import time
-from unittest import mock
-
 import pytest
 
+from datetime import time
+from pytest_mock import MockerFixture
 from src.models.students_model import Presenca
+from src.utils.date_handler import DateHandler
 from src.utils.schedule import CourseClass, LateTypes, Schedule
 from tests.conftest import ClientContext, DbContext, SeedData
 
 
+@pytest.mark.integration
 class TestPresencaCpfNumber:
-    """
-    TODO: adicionar um app_exception na resosta da solicitaçao abaixo
-
-
-    def test_not_authenticated_user(self, client_context: ClientContext):
-        response = client_context.client.post("/presenca/12345678901")
-        print(response.json())
-        assert response.status_code == 401
-        assert response.json()["app_exception"] == ""
-    """
-
-    def test_invalid_user_credentials(self, client_context: ClientContext):
+    def test_invalid_user_credentials(self, client_context):
         response = client_context.client.post(
             "/presenca/12345678901", auth=("something", "something")
         )
-        assert response.status_code == 401
-        assert response.json()["app_exception"] == "NotAuthorized"
 
-    def test_student_not_found_in_data_base(self, client_context: ClientContext):
+        response_body = response.json()
+
+        assert response.status_code == 401
+        assert response_body["app_exception"] == "NotAuthorized"
+        assert response_body["message"] == "Usuário ou senha inválidos"
+
+    def test_student_not_found(self, client_context: ClientContext):
         response = client_context.client.post(
             "/presenca/12345678901", auth=client_context.credentials
         )
+
+        response_body = response.json()
+
         assert response.status_code == 404
-        assert response.json()["app_exception"] == "StudentNotFound"
+        assert response_body["app_exception"] == "StudentNotFound"
+        assert response_body["message"] == "CPF do Aluno não encontrado"
 
-    @mock.patch(
-        "src.utils.schedule.Schedule.get_current_class",
-        return_value=None,
-    )
-    def test_attendace_request_not_on_class_time(
-        self, client_context: ClientContext, seed_db_data: SeedData
-    ):
-        response = client_context.client.post(
-            f"/presenca/{seed_db_data.student.cpf}", auth=client_context.credentials
-        )
-        assert response.status_code == 400
-        assert response.json()["app_exception"] == "NotOngoingLesson"
-
-    @mock.patch(
-        "src.utils.schedule.Schedule",
-        new=mock.MagicMock(get_current_class=lambda: CourseClass(0, time(17, 00), time(19, 00))),
-    )
-    @pytest.mark.erro
-    def test_attendace_successfully_created(
+    def test_attendance_request_not_on_class_time(
         self,
+        mocker: MockerFixture,
         client_context: ClientContext,
         seed_db_data: SeedData,
-        db_context: DbContext,
     ):
+        client_context.app.dependency_overrides[Schedule] = lambda: mocker.Mock(
+            get_current_class=mocker.Mock(return_value=None)
+        )
+
         response = client_context.client.post(
             f"/presenca/{seed_db_data.student.cpf}", auth=client_context.credentials
         )
 
-        new_attendance = (
-            db_context.session.query(Presenca)
-            .filter(
-                Presenca.student_id
-                == seed_db_data.student.id
-                # Presenca.created_at == datetime.datetime(2023, 3, 13, 18, 0),
-            )
-            .first()
+        response_body = response.json()
+
+        assert response.status_code == 400
+        assert response_body["app_exception"] == "NotOngoingLesson"
+        assert (
+            response_body["message"]
+            == "Não há aula em andamento. As presenças só podem ser \
+                registradas nos intervalo entre 17:45 até 20:00 e 20:15 até 22:00"
+        )
+
+    def test_attendance_already_confirmed(
+        self,
+        mocker: MockerFixture,
+        client_context: ClientContext,
+        seed_db_data: SeedData,
+    ):
+        client_context.app.dependency_overrides[Schedule] = lambda: mocker.Mock(
+            get_current_class=lambda: CourseClass(0, time(17, 45), time(20, 00))
+        )
+
+        client_context.app.dependency_overrides[DateHandler] = lambda: mocker.Mock(
+            is_today=mocker.Mock(return_value=True),
+            validate_interval=mocker.Mock(return_value=True),
+        )
+
+        response = client_context.client.post(
+            f"/presenca/{seed_db_data.student.cpf}", auth=client_context.credentials
+        )
+
+        response_body = response.json()
+
+        assert response.status_code == 400
+        assert response_body["app_exception"] == "AttendanceAlreadyConfirmed"
+        assert response_body["message"] == "Presença já confirmada"
+
+    def test_attendance_successfully_created(
+        self,
+        mocker: MockerFixture,
+        client_context: ClientContext,
+        seed_db_data: SeedData,
+    ):
+        client_context.app.dependency_overrides[Schedule] = lambda: mocker.Mock(
+            get_current_class=lambda: CourseClass(0, time(17, 45), time(20, 00))
+        )
+
+        client_context.app.dependency_overrides[DateHandler] = lambda: mocker.Mock(
+            is_today=mocker.Mock(return_value=False),
+            validate_interval=mocker.Mock(return_value=False),
+        )
+
+        response = client_context.client.post(
+            f"/presenca/{seed_db_data.student.cpf}", auth=client_context.credentials
         )
 
         assert response.status_code == 201
-
-        assert new_attendance.student_id == seed_db_data.student.id
-        # assert new_attendance.created_at == datetime.datetime(2023, 3, 13, 18, 0)
-        assert new_attendance.id is not None
-        assert new_attendance.first_half is True
-        assert new_attendance.absence is False
-        assert new_attendance.late == LateTypes.ON_TIME

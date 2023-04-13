@@ -1,5 +1,7 @@
+# TODO: Arrumar o erro do mypy sobre importação
 import os
-from datetime import date, datetime
+
+from datetime import datetime
 from typing import Type
 
 import pytest
@@ -12,7 +14,7 @@ from src.models.base_model import Base
 from src.models.students_model import CadastroAlunos, Presenca
 from src.utils.schedule import LateTypes
 
-### DATA BASE FXTURES ###
+### DATA BASE FIXTURES ###
 
 
 class DbContext:
@@ -22,10 +24,10 @@ class DbContext:
 
 
 @pytest.fixture(scope="session")
-def db_context() -> Type[DbContext]:
+def db_context() -> Type[DbContext]:  # TODO: Arrumar o erro do mypy
     engine = create_engine(os.getenv("DB_URL"), connect_args={"check_same_thread": False})
     test_session_maker = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    test_session = test_session_maker()
+    test_session = test_session_maker()  # TODO: Arrumar o erro do mypy
     return DbContext(engine, test_session)
 
 
@@ -34,13 +36,13 @@ def reset_db(db_context):
     """Redirect request to use testing DB."""
     Base.metadata.drop_all(bind=db_context.engine)
     Base.metadata.create_all(bind=db_context.engine)
-    # Base.metadata.clear() FIXME: not working
 
 
-class SeedData():
+class SeedData:
     def __init__(self, student: CadastroAlunos, attendances: list[Presenca]):
         self.student = student
         self.attendances = attendances
+
 
 @pytest.fixture(scope="function")
 def seed_db_data(db_context: DbContext):
@@ -52,7 +54,6 @@ def seed_db_data(db_context: DbContext):
         cep="12345678",
         email="el_dog_bucica@einsteinfloripa.com.br",
         phone="123456789",
-        birthdate=date(2021, 1, 1),
         civil_state="Solteiro",
         state="Santa Catarina",
         city="Florianópolis",
@@ -61,6 +62,7 @@ def seed_db_data(db_context: DbContext):
         number="1",
         complement="",
     )
+
     attendances = [
         Presenca(
             student_id=1,
@@ -88,13 +90,17 @@ def seed_db_data(db_context: DbContext):
     db_context.session.add(student)
     db_context.session.add_all(attendances)
     db_context.session.commit()
+
     yield SeedData(student, attendances)
+
     db_context.session.delete(student)
+
     for attendance in attendances:
         db_context.session.delete(attendance)
+
     db_context.session.commit()
-    
- 
+
+
 ###
 
 
@@ -103,6 +109,7 @@ def seed_db_data(db_context: DbContext):
 
 class ClientContext:
     def __init__(self) -> None:
+        self.app = app
         self.client = TestClient(app)
         self.credentials = (os.getenv("ADMIN_USERNAME"), os.getenv("ADMIN_PASSWORD"))
 

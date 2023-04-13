@@ -246,7 +246,7 @@ files = [
 name = "exceptiongroup"
 version = "1.1.1"
 description = "Backport of PEP 654 (exception groups)"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -488,7 +488,7 @@ files = [
 name = "iniconfig"
 version = "2.0.0"
 description = "brain-dead simple config-ini parsing"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -838,7 +838,7 @@ setuptools = "*"
 name = "packaging"
 version = "23.1"
 description = "Core utilities for Python packages"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -921,7 +921,7 @@ test = ["appdirs (==1.4.4)", "covdefaults (>=2.3)", "pytest (>=7.2.2)", "pytest-
 name = "pluggy"
 version = "1.0.0"
 description = "plugin and hook calling mechanisms for python"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 files = [
@@ -1167,7 +1167,7 @@ testutils = ["gitpython (>3)"]
 name = "pytest"
 version = "7.3.0"
 description = "pytest: simple powerful testing with Python"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -1201,6 +1201,22 @@ files = [
 [package.dependencies]
 pytest = ">=5.0.0"
 python-dotenv = ">=0.9.1"
+
+[[package]]
+name = "pytest-fastapi-deps"
+version = "0.2.3"
+description = "A fixture which allows easy replacement of fastapi dependencies for testing"
+category = "main"
+optional = false
+python-versions = ">=3.7,<4.0"
+files = [
+    {file = "pytest-fastapi-deps-0.2.3.tar.gz", hash = "sha256:b472c147967218d458fec3c7ac29bcad64d81e0c17e8519bb41628b6fac318fa"},
+    {file = "pytest_fastapi_deps-0.2.3-py3-none-any.whl", hash = "sha256:f1f405317623d13e9b5c220a9e962905500cc9a3ce3736dd55aeb0b7d665e3aa"},
+]
+
+[package.dependencies]
+fastapi = "*"
+pytest = "*"
 
 [[package]]
 name = "pytest-mock"
@@ -1667,4 +1683,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "700754b491607b49e5cd97e7baa4b9ec0fa8a578edeb41cb1d78967c23e4fed9"
+content-hash = "eb2a2973f76d5c0d5ced7ddbccaaf6724c804bfb1c50512a72748eeea22cebe2"

@@ -1,5 +1,3 @@
-from unittest import mock
-
 import pytest
 from faker import Faker
 from pytest_mock import MockerFixture
@@ -16,6 +14,7 @@ from src.utils.schedule import CourseClass, FirstClassHalf, LateTypes
 fake = Faker()
 
 
+@pytest.mark.unit
 class TestStudentService:
     @pytest.fixture
     def course_class_data(self):

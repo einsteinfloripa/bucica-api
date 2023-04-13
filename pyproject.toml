@@ -16,6 +16,7 @@ python-dotenv = "^1.0.0"
 alembic = "^1.9.4"
 psycopg2-binary = "^2.9.5"
 ipdb = "^0.13.13"
+pytest-fastapi-deps = "^0.2.3"
 
 [tool.poetry.group.dev.dependencies]
 faker = "^17.6.0"
@@ -55,3 +56,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 env_files = ".env.test"
+markers = [
+  "integration: marks tests as integration (deselect with '-m \"not integration\"')",
+  "unit: marks tests as unit (deselect with '-m \"not unit\"')",
+]

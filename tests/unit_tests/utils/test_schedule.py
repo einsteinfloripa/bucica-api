@@ -14,6 +14,7 @@ from src.utils.schedule import (
 )
 
 
+@pytest.mark.unit
 class TestCourseClass:
     @pytest.mark.parametrize(
         "start, end, expected",
@@ -35,7 +36,6 @@ class TestCourseClass:
 
         assert course_class.is_ongoing() == expected
 
-    @pytest.mark.outro
     @pytest.mark.parametrize(
         "mocked_time, start, end, expected",
         [
