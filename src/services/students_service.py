@@ -1,18 +1,22 @@
-from src.errors.students_exception import (
-    AttendanceAlreadyConfirmed,
-    NotOngoingLesson,
-    StudentNotFound,
-)
+from fastapi import Depends
+
+from src.errors.students_exception import (AttendanceAlreadyConfirmed,
+                                           NotOngoingLesson, StudentNotFound)
 from src.repositories.attendance_repository import AttendanceRepository
 from src.repositories.students_repository import StudentRepository
-from src.services.base_services import AppService
 from src.utils.schedule import Schedule
 
 
-class StudentService(AppService):
-    student_repository = StudentRepository()
-    attendance_repository = AttendanceRepository()
-    schedule = Schedule()
+class StudentService:
+    def __init__(
+        self,
+        student_repository: StudentRepository = Depends(StudentRepository),
+        attendance_repository: AttendanceRepository = Depends(AttendanceRepository),
+        schedule: Schedule = Depends(Schedule),
+    ):
+        self.student_repository = student_repository
+        self.attendance_repository = attendance_repository
+        self.schedule = schedule
 
     def add_attendance(self, cpf_key: str):
         student = self.student_repository.get_by_cpf(cpf_key)
@@ -21,7 +25,10 @@ class StudentService(AppService):
 
         current_class = self.schedule.get_current_class()
         if current_class is None:
-            raise NotOngoingLesson("Não há aula em andamento")
+            raise NotOngoingLesson(
+                "Não há aula em andamento. As presenças só podem ser \
+                registradas nos intervalo entre 17:45 até 20:00 e 20:15 até 22:00"
+            )
 
         attendance = self.attendance_repository.get_first_with(
             student_id=student.id, first_half=current_class.is_first_half()

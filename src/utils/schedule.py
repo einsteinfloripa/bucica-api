@@ -3,8 +3,8 @@ from datetime import datetime, time, timedelta
 
 
 class Late(enum.Enum):
-    ON_TIME = timedelta(seconds=1500)  # 25 minutes
-    HALF_LATE = timedelta(seconds=3600)  # 1 hour
+    ON_TIME = timedelta(seconds=1800)  # 30 minutes
+    HALF_LATE = timedelta(seconds=3900)  # 1 hour and 5 minutes
 
 
 class LateTypes(enum.Enum):
@@ -22,12 +22,12 @@ class Weekday(enum.Enum):
 
 
 class FirstClassHalf(enum.Enum):
-    BEGIN = time(17, 50)
+    BEGIN = time(17, 45)
     END = time(20, 00)
 
 
 class SecondClassHalf(enum.Enum):
-    BEGIN = time(20, 20)
+    BEGIN = time(20, 15)
     END = time(22, 00)
 
 
@@ -38,7 +38,7 @@ class CourseClass:
         self.weekday = weekday
 
     def is_first_half(self) -> bool:
-        return self.start == FirstClassHalf.BEGIN.value
+        return self.start.time() == FirstClassHalf.BEGIN.value
 
     def is_ongoing(self) -> bool:
         if self.weekday == datetime.now().weekday():
