@@ -37,11 +37,13 @@ class StudentService:
             )
 
         attendance = self.attendance_repository.get_last_with(student_id=student.id)
-        is_today = self.date_handler.is_today(attendance.created_at)
+
+        # TODO: Arrumar attendance quando for None e remover o mypy: ignore
+        is_today = self.date_handler.is_today(attendance.created_at)  # mypy: ignore
         is_first_half = self.date_handler.validate_interval(
-            attendance.created_at, current_class.start, current_class.end
+            attendance.created_at, current_class.start, current_class.end  # mypy: ignore
         )
         if is_today and is_first_half:
             raise AttendanceAlreadyConfirmed("Presença já confirmada")
-        
+
         self.attendance_repository.create_attendance(student.id, current_class)

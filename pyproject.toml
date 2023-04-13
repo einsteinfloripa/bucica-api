@@ -18,6 +18,7 @@ mock = "^5.0.1"
 python-dotenv = "^1.0.0"
 alembic = "^1.9.4"
 psycopg2-binary = "^2.9.5"
+ipdb = "^0.13.13"
 
 [tool.poetry.group.dev.dependencies]
 faker = "^17.6.0"
