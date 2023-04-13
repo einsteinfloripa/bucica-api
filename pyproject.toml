@@ -21,7 +21,7 @@ psycopg2-binary = "^2.9.5"
 
 [tool.poetry.group.dev.dependencies]
 faker = "^18.4.0"
-pylint = "^2.17.1"
+pylint = "^2.17.2"
 black = "^23.3.0"
 mypy = "^1.0.1"
 pytest = "^7.2.1"
