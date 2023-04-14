@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import TypedDict
+from typing import TypedDict, Optional
 
-from sqlalchemy import ForeignKey, text
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base_model import Base
@@ -77,13 +77,12 @@ class Presenca(Base):
         late: LateTypes,
         absence: bool,
         first_half: bool,
-        created_at: datetime = datetime.now(),
     ):
         self.student_id = student_id
         self.late = late
         self.absence = absence
         self.first_half = first_half
-        self.created_at = created_at
+        self.created_at = datetime.now()
 
     def __repr__(self):
         return f"Presenca(id={self.id}, student_id={self.student_id}, late={self.late}, absence={self.absence}, created_at={self.created_at}, first_half={self.first_half})"

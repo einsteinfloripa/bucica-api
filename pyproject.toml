@@ -17,6 +17,7 @@ alembic = "^1.9.4"
 psycopg2-binary = "^2.9.5"
 ipdb = "^0.13.13"
 pytest-fastapi-deps = "^0.2.3"
+freezegun = "^1.2.2"
 
 [tool.poetry.group.dev.dependencies]
 faker = "^17.6.0"

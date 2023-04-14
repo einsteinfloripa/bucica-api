@@ -39,7 +39,7 @@ def reset_db(db_context):
 
 
 class SeedData:
-    def __init__(self, student: CadastroAlunos, attendances: list[Presenca]):
+    def __init__(self, student: CadastroAlunos, attendances: list[Presenca] = []):
         self.student = student
         self.attendances = attendances
 
@@ -63,42 +63,13 @@ def seed_db_data(db_context: DbContext):
         complement="",
     )
 
-    attendances = [
-        Presenca(
-            student_id=1,
-            late=LateTypes.ON_TIME,
-            absence=False,
-            first_half=True,
-            created_at=datetime(2023, 4, 3, 18, 0, 0),
-        ),
-        Presenca(
-            student_id=1,
-            late=LateTypes.HALF_LATE,
-            absence=False,
-            first_half=True,
-            created_at=datetime(2023, 4, 4, 18, 40, 0),
-        ),
-        Presenca(
-            student_id=1,
-            late=LateTypes.ON_TIME,
-            absence=False,
-            first_half=True,
-            created_at=datetime(2023, 4, 5, 19, 0, 0),
-        ),
-    ]
-
     db_context.session.add(student)
-    db_context.session.add_all(attendances)
     db_context.session.commit()
 
-    yield SeedData(student, attendances)
+    yield SeedData(student)
 
-    db_context.session.delete(student)
-
-    for attendance in attendances:
-        db_context.session.delete(attendance)
-
-    db_context.session.commit()
+    db_context.session.query(Presenca).delete()
+    db_context.session.query(CadastroAlunos).delete()
 
 
 ###
@@ -117,7 +88,7 @@ class ClientContext:
 @pytest.fixture(scope="function")
 def client_context() -> ClientContext:
     """Test client initiation for all tests."""
-    return ClientContext()
+    yield ClientContext()
 
 
 ###

@@ -1,5 +1,6 @@
 from fastapi import Depends
 
+
 from src.errors.students_exception import (
     AttendanceAlreadyConfirmed,
     NotOngoingLesson,
@@ -36,14 +37,16 @@ class StudentService:
                 registradas nos intervalo entre 17:45 até 20:00 e 20:15 até 22:00"
             )
 
+
         attendance = self.attendance_repository.get_last_with(student_id=student.id)
 
         # TODO: Arrumar attendance quando for None e remover o mypy: ignore
-        is_today = self.date_handler.is_today(attendance.created_at)  # mypy: ignore
-        is_first_half = self.date_handler.validate_interval(
-            attendance.created_at, current_class.start, current_class.end  # mypy: ignore
-        )
-        if is_today and is_first_half:
-            raise AttendanceAlreadyConfirmed("Presença já confirmada")
+        if attendance is not None:
+            is_today = self.date_handler.is_today(attendance.created_at)  # mypy: ignore
+            is_first_half = self.date_handler.validate_interval(
+                attendance.created_at, current_class.start, current_class.end  # mypy: ignore
+            )
+            if is_today and is_first_half:
+                raise AttendanceAlreadyConfirmed("Presença já confirmada")
 
         self.attendance_repository.create_attendance(student.id, current_class)

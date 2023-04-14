@@ -1,7 +1,8 @@
+from pytest import Session
 from sqlalchemy import Date, Integer, String, column, table
 
 from src.models.students_model import CadastroAlunos
-
+import faker
 
 class CadastroAlunosSeed(CadastroAlunos):
     def create_table(self):
