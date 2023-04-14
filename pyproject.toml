@@ -16,7 +16,7 @@ psycopg2 = "^2.9.6"
 pytest-mock = "^3.10.0"
 mock = "^5.0.1"
 python-dotenv = "^1.0.0"
-alembic = "^1.9.4"
+alembic = "^1.10.3"
 psycopg2-binary = "^2.9.6"
 
 [tool.poetry.group.dev.dependencies]
