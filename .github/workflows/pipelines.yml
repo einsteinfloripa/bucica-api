@@ -60,7 +60,7 @@ jobs:
         run: poetry run pytest -m ${{ matrix.test_type }}
 
   deploy-production:
-    if: ${{ github.ref_name == 'main' }}
+    if: ${{ github.head_ref == 'main' }}
     name: Deploy to Hostinger (Production)
     needs: [tests]
     environment:
@@ -94,7 +94,7 @@ jobs:
           make deploy-nginx
 
   deploy-staging:
-    if: ${{ github.ref_name == 'develop' }}
+    if: ${{ github.head_ref == 'develop' }}
     name: Deploy to Hostinger (Staging)
     needs: [tests]
     runs-on: self-hosted
