@@ -9,7 +9,7 @@ on:
 jobs:
   lint_code:
     name: Pylint in Code
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
 
@@ -31,7 +31,7 @@ jobs:
 
   tests:
     name: Run tests
-    runs-on: ubuntu-lastest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         test_type: [unit, integration]
