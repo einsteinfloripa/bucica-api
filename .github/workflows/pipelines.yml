@@ -95,7 +95,7 @@ jobs:
 
   deploy-staging:
     name: Deploy to Hostinger (Staging)
-    needs: [tests]
+    # needs: [tests]
     runs-on: self-hosted
     # environment:
     #   name: Staging
@@ -108,7 +108,7 @@ jobs:
           fetch-depth: 0
 
       - name: Print branch name
-        run: echo ${{ github.head_ref }}
+        run: echo ${{ github.event.pull_request.base.ref }}
 
       - name: Make env file
         uses: SpicyPizza/create-envfile@v1.3
