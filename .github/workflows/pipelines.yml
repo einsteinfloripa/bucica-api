@@ -60,7 +60,7 @@ jobs:
         run: poetry run pytest -m ${{ matrix.test_type }}
 
   deploy-production:
-    if: ${{ github.head_ref == 'main' }}
+    if: ${{ github.event.pull_request.base.ref == 'main' }}
     name: Deploy to Hostinger (Production)
     needs: [tests]
     environment:
@@ -94,21 +94,19 @@ jobs:
           make deploy-nginx
 
   deploy-staging:
+    if: ${{ github.event.pull_request.base.ref == 'develop' }}
     name: Deploy to Hostinger (Staging)
-    # needs: [tests]
+    needs: [tests]
     runs-on: self-hosted
-    # environment:
-    #   name: Staging
-    #   url: https://staging-api.einsteinfloripa.com.br
+    environment:
+      name: Staging
+      url: https://staging-api.einsteinfloripa.com.br
 
     steps:
       - name: Checkout in branch ${{ github.ref_name }}
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
-      - name: Print branch name
-        run: echo ${{ github.event.pull_request.base.ref }}
 
       - name: Make env file
         uses: SpicyPizza/create-envfile@v1.3
@@ -125,7 +123,7 @@ jobs:
           file_name: .env.staging
           fail_on_empty: true
 
-      # - name: Deploy to Hostingero
-      #   run: |
-      #     make deploy-staging
-      #     make deploy-nginx
+      - name: Deploy to Hostinger
+        run: |
+          make deploy-staging
+          make deploy-nginx
