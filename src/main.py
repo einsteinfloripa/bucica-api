@@ -4,6 +4,8 @@ from fastapi.responses import JSONResponse
 
 from src.errors.base_exception import AppExceptionBase
 from src.routers.students_router import router as PresencaRouter
+from src.scripts.register_attendance_first_half import register_student_first_half
+from src.scripts.register_attendance_second_half import register_student_second_half
 
 app = FastAPI()
 
@@ -17,6 +19,14 @@ async def app_exception_handler(_, exc):
             "message": exc.message,
         },
     )
+
+
+@app.on_event("startup")
+async def start_schedule():
+    import threading
+
+    threading.Thread(target=register_student_first_half).start()
+    threading.Thread(target=register_student_second_half).start()
 
 
 app.add_middleware(
