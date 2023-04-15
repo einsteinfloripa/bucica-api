@@ -29,5 +29,8 @@
   },
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "ms-python.black-formatter",
-  "python.linting.enabled": false
+  "python.linting.enabled": false,
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

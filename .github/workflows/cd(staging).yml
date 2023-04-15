@@ -1,14 +1,14 @@
 name: CD(Deploy to Hostinger Staging)
 
 on:
-  push:
+  pull_request:
     branches:
       - develop
 
 jobs:
   deploy-staging:
-    if: ${{ github.ref_name == 'develop' }}
     name: Deploy to Hostinger (Staging)
+    needs: [tests.tests, lint.lint_code]
     runs-on: self-hosted
     environment:
       name: Staging

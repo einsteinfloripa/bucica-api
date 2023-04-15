@@ -1,7 +1,7 @@
 name: CD(Deploy to Hostinger Production)
 
 on:
-  push:
+  pull_request:
     branches:
       - main
 
