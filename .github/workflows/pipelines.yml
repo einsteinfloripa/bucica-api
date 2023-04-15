@@ -59,19 +59,14 @@ jobs:
       - name: Run ${{ matrix.test_type }} tests
         run: poetry run pytest -m ${{ matrix.test_type }}
 
-  deploy:
-    name: Deploy to Hostinger
-    needs: [tests, lint_code]
+  deploy-production:
+    if: ${{ github.ref_name == 'main' }}
+    name: Deploy to Hostinger (Production)
+    needs: [lint_code, tests]
+    environment:
+      name: Production
+      url: https://api.einsteinfloripa.com.br
     runs-on: self-hosted
-    strategy:
-      matrix:
-        env:
-          - name: Staging
-            url: https://staging-api.einsteinfloripa.com.br
-            deploy: ${{ github.event_name == 'pull_request' && github.head_ref == 'develop' }}
-          - name: Production
-            url: https://api.einsteinfloripa.com.br
-            deploy: ${{ github.event_name == 'pull_request' && github.head_ref == 'main' }}
     steps:
       - name: Checkout in branch ${{ github.ref_name }}
         uses: actions/checkout@v2
@@ -85,18 +80,50 @@ jobs:
           envkey_POSTGRES_USER: ${{ vars.POSTGRES_USER }}
           envkey_POSTGRES_PASSWORD: ${{ vars.POSTGRES_PASSWORD }}
           envkey_POSTGRES_DB: ${{ vars.POSTGRES_DB }}
-          envkey_POSTGRES_HOST: bucica-postgres-db-${{ matrix.env.name | lower }}
+          envkey_POSTGRES_HOST: bucica-postgres-db-production
           envkey_DB_PORT: ${{ vars.DB_PORT }}
           envkey_DB_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:5432/${POSTGRES_DB}
           envkey_ADMIN_USERNAME: ${{ vars.ADMIN_USERNAME }}
           envkey_ADMIN_PASSWORD: ${{ vars.ADMIN_PASSWORD }}
-          file_name: .env.${{ matrix.env.name | lower }}
+          file_name: .env.production
           fail_on_empty: true
-        if: matrix.env.deploy
 
       - name: Deploy to Hostinger
         run: |
-          if ${{ matrix.deploy }}; then
-            make deploy-${{ matrix.env.name | lower }}
-            make deploy-nginx
-          fi
+          make deploy-production
+          make deploy-nginx
+
+  deploy-staging:
+    if: ${{ github.ref_name == 'develop' }}
+    name: Deploy to Hostinger (Staging)
+    needs: [lint_code, tests]
+    runs-on: self-hosted
+    environment:
+      name: Staging
+      url: https://staging-api.einsteinfloripa.com.br
+
+    steps:
+      - name: Checkout in branch ${{ github.ref_name }}
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Make env file
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_PORT: ${{ vars.PORT }}
+          envkey_POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+          envkey_POSTGRES_PASSWORD: ${{ vars.POSTGRES_PASSWORD }}
+          envkey_POSTGRES_DB: ${{ vars.POSTGRES_DB }}
+          envkey_POSTGRES_HOST: bucica-postgres-db-staging
+          envkey_DB_PORT: ${{ vars.DB_PORT }}
+          envkey_DB_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:5432/${POSTGRES_DB}
+          envkey_ADMIN_USERNAME: ${{ vars.ADMIN_USERNAME }}
+          envkey_ADMIN_PASSWORD: ${{ vars.ADMIN_PASSWORD }}
+          file_name: .env.staging
+          fail_on_empty: true
+
+      - name: Deploy to Hostinger
+        run: |
+          make deploy-staging
+          make deploy-nginx
