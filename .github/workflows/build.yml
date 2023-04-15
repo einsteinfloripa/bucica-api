@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-production:
-    if: ${{ github.ref_name == 'main' }}
+    if: ${{ github.head_ref == 'main' }}
     name: Test Build (Production)
     environment:
       name: Production
@@ -40,7 +40,7 @@ jobs:
           make deploy-nginx
 
   build-staging:
-    if: ${{ github.ref_name == 'develop' }}
+    if: ${{ github.head_ref == 'develop' }}
     name: Test Build (Staging)
     runs-on: ubuntu-latest
     environment:
