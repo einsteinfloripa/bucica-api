@@ -1,15 +1,68 @@
-name: CI(Deploy to Hostinger)
+name: Pipelines
 
 on:
-  push:
+  pull_request:
     branches:
       - main
       - develop
 
 jobs:
+  lint_code:
+    name: Pylint in Code
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.2.2
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Lint with pylint
+        run: poetry run pylint --rcfile=.pylintrc --output-format=colorized --fail-under=7 -r=y src
+
+  tests:
+    name: Run tests
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        test_type: [unit, integration]
+    env:
+      DB_URL: "sqlite:///test.db"
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: admin
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.2.2
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run ${{ matrix.test_type }} tests
+        run: poetry run pytest -m ${{ matrix.test_type }}
+
   deploy-production:
-    if: ${{ github.ref_name == 'main' }}
+    if: ${{ github.event.pull_request.base.ref == 'main' }}
     name: Deploy to Hostinger (Production)
+    needs: [tests]
     environment:
       name: Production
       url: https://api.einsteinfloripa.com.br
@@ -41,8 +94,9 @@ jobs:
           make deploy-nginx
 
   deploy-staging:
-    if: ${{ github.ref_name == 'develop' }}
+    if: ${{ github.event.pull_request.base.ref == 'develop' }}
     name: Deploy to Hostinger (Staging)
+    needs: [tests]
     runs-on: self-hosted
     environment:
       name: Staging

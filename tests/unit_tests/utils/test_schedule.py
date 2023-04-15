@@ -14,6 +14,7 @@ from src.utils.schedule import (
 )
 
 
+@pytest.mark.unit
 class TestCourseClass:
     @pytest.mark.parametrize(
         "start, end, expected",

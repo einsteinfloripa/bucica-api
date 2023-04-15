@@ -1,4 +1,4 @@
-from sqlalchemy import Date, Integer, String, column, table
+from sqlalchemy import Integer, String, column, table
 
 from src.models.students_model import CadastroAlunos
 
@@ -14,7 +14,6 @@ class CadastroAlunosSeed(CadastroAlunos):
             column("email", String),
             column("nome", String),
             column("telefone", String),
-            column("data_nascimento", Date),
             column("estado_civil", String),
             column("estado", String),
             column("cidade", String),
@@ -34,7 +33,6 @@ class CadastroAlunosSeed(CadastroAlunos):
                 "email": self.email,
                 "nome": self.name,
                 "telefone": self.phone,
-                "data_nascimento": self.birthdate,
                 "estado_civil": self.civil_state,
                 "estado": self.state,
                 "cidade": self.city,
