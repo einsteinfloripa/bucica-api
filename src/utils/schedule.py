@@ -37,7 +37,6 @@ class CourseClass:
         self.end = datetime.combine(datetime.today(), end_time)
         self.weekday = weekday
 
-
     def is_first_half(self) -> bool:
         return self.start.time() == FirstClassHalf.BEGIN.value
 
@@ -69,51 +68,61 @@ class CourseClass:
 
 
 class Schedule:
-    MONDAY = [
-        CourseClass(Weekday.MONDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value),
-        CourseClass(Weekday.MONDAY.value, SecondClassHalf.BEGIN.value, SecondClassHalf.END.value),
-    ]
-
-    THURSDAY = [
-        CourseClass(Weekday.THURSDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value),
-        CourseClass(
-            Weekday.THURSDAY.value,
-            SecondClassHalf.BEGIN.value,
-            SecondClassHalf.END.value,
-        ),
-    ]
-
-    WEDNESDAY = [
-        CourseClass(
-            Weekday.WEDNESDAY.value,
-            FirstClassHalf.BEGIN.value,
-            FirstClassHalf.END.value,
-        ),
-        CourseClass(
-            Weekday.WEDNESDAY.value,
-            SecondClassHalf.BEGIN.value,
-            SecondClassHalf.END.value,
-        ),
-    ]
-
-    TUESDAY = [
-        CourseClass(Weekday.TUESDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value),
-        CourseClass(
-            Weekday.TUESDAY.value,
-            SecondClassHalf.BEGIN.value,
-            SecondClassHalf.END.value,
-        ),
-    ]
-
-    FRIDAY = [
-        CourseClass(Weekday.FRIDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value),
-        CourseClass(Weekday.FRIDAY.value, SecondClassHalf.BEGIN.value, SecondClassHalf.END.value),
-    ]
-
-    CLASSES_SCHEDULE = MONDAY + TUESDAY + WEDNESDAY + THURSDAY + FRIDAY
+    def __init__(self) -> None:
+        pass
 
     def get_current_class(self) -> CourseClass | None:
-        classes_schedule = self.CLASSES_SCHEDULE
+        MONDAY = [
+            CourseClass(Weekday.MONDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value),
+            CourseClass(
+                Weekday.MONDAY.value, SecondClassHalf.BEGIN.value, SecondClassHalf.END.value
+            ),
+        ]
+
+        THURSDAY = [
+            CourseClass(
+                Weekday.THURSDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value
+            ),
+            CourseClass(
+                Weekday.THURSDAY.value,
+                SecondClassHalf.BEGIN.value,
+                SecondClassHalf.END.value,
+            ),
+        ]
+
+        WEDNESDAY = [
+            CourseClass(
+                Weekday.WEDNESDAY.value,
+                FirstClassHalf.BEGIN.value,
+                FirstClassHalf.END.value,
+            ),
+            CourseClass(
+                Weekday.WEDNESDAY.value,
+                SecondClassHalf.BEGIN.value,
+                SecondClassHalf.END.value,
+            ),
+        ]
+
+        TUESDAY = [
+            CourseClass(
+                Weekday.TUESDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value
+            ),
+            CourseClass(
+                Weekday.TUESDAY.value,
+                SecondClassHalf.BEGIN.value,
+                SecondClassHalf.END.value,
+            ),
+        ]
+
+        FRIDAY = [
+            CourseClass(Weekday.FRIDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value),
+            CourseClass(
+                Weekday.FRIDAY.value, SecondClassHalf.BEGIN.value, SecondClassHalf.END.value
+            ),
+        ]
+        CLASSES_SCHEDULE = MONDAY + TUESDAY + WEDNESDAY + THURSDAY + FRIDAY
+
+        classes_schedule = CLASSES_SCHEDULE
         for course_class in classes_schedule:
             if course_class.is_ongoing():
                 return course_class

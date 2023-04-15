@@ -108,8 +108,7 @@ class TestStudentService:
         assert app_exception.type.__name__ == "NotOngoingLesson"
         assert (
             app_exception.value.message
-            == "Não há aula em andamento. As presenças só podem ser \
-                registradas nos intervalo entre 17:45 até 20:00 e 20:15 até 22:00"
+            == "Não há aula em andamento. As presenças só podem ser registradas nos intervalo entre 17:45 até 20:00 e 20:15 até 22:00"
         )
         assert app_exception.value.status_code == 400
 

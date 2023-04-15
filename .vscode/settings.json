@@ -28,5 +28,6 @@
     "**/.pytest_cache": true
   },
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "ms-python.black-formatter"
+  "editor.defaultFormatter": "ms-python.black-formatter",
+  "python.linting.enabled": false
 }
