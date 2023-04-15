@@ -1,4 +1,4 @@
-name: CD(Deploy to Hostinger)
+name: CI(Test Build)
 
 on:
   push:
@@ -7,13 +7,12 @@ on:
       - develop
 
 jobs:
-  deploy-production:
+  build-production:
     if: ${{ github.ref_name == 'main' }}
-    name: Deploy to Hostinger (Production)
+    name: Test Build (Production)
     environment:
       name: Production
-      url: https://api.einsteinfloripa.com.br
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout in branch ${{ github.ref_name }}
         uses: actions/checkout@v2
@@ -35,18 +34,17 @@ jobs:
           file_name: .env.production
           fail_on_empty: true
 
-      - name: Deploy to Hostinger
+      - name: Test Build for Production
         run: |
           make deploy-production
           make deploy-nginx
 
-  deploy-staging:
+  build-staging:
     if: ${{ github.ref_name == 'develop' }}
-    name: Deploy to Hostinger (Staging)
-    runs-on: self-hosted
+    name: Test Build (Staging)
+    runs-on: ubuntu-latest
     environment:
-      name: Staging
-      url: https://staging-api.einsteinfloripa.com.br
+        name: Staging
 
     steps:
       - name: Checkout in branch ${{ github.ref_name }}
@@ -69,7 +67,7 @@ jobs:
           file_name: .env.staging
           fail_on_empty: true
 
-      - name: Deploy to Hostinger
+      - name: Test Build for Staging
         run: |
           make deploy-staging
           make deploy-nginx
