@@ -107,6 +107,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Print branch name
+        run: echo ${{ github.head_ref }}
+
       - name: Make env file
         uses: SpicyPizza/create-envfile@v1.3
         with:
@@ -121,9 +124,6 @@ jobs:
           envkey_ADMIN_PASSWORD: ${{ vars.ADMIN_PASSWORD }}
           file_name: .env.staging
           fail_on_empty: true
-
-      - name: Print branch name
-        run: echo ${{ github.head_ref }}
 
       # - name: Deploy to Hostingero
       #   run: |
