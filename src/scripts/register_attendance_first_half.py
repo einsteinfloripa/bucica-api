@@ -8,13 +8,18 @@ from src.models.students_model import CadastroAlunos, Presenca
 from src.utils.schedule import LateTypes
 
 
-@schedule.repeat(schedule.every().monday.tuesday.wednesday.thursday.friday.at("20:00"))
+
+@schedule.repeat(schedule.every().monday.at("20:01"))
+@schedule.repeat(schedule.every().tuesday.at("20:01"))
+@schedule.repeat(schedule.every().wednesday.at("20:01"))
+@schedule.repeat(schedule.every().thursday.at("20:01"))
+@schedule.repeat(schedule.every().friday.at("20:01"))
 def register_attendance():
     print("Registrando faltas para o primeiro turno...")
     db = SessionLocal()
 
     students = db.query(CadastroAlunos).all()
-
+    
     for student in students:
         today = date.today()
         last_attendance = (
