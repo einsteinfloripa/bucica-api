@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 import time
 import schedule
 from sqlalchemy import func
@@ -16,6 +16,7 @@ from src.utils.schedule import LateTypes
 @schedule.repeat(schedule.every().friday.at("20:01"))
 def register_attendance():
     print("Registrando faltas para o primeiro turno...")
+    print('datetime: ', datetime.now())
     db = SessionLocal()
 
     students = db.query(CadastroAlunos).all()
@@ -32,6 +33,7 @@ def register_attendance():
             .order_by(Presenca.id.desc())
             .first()
         )
+        # breakpoint()
 
         if last_attendance is None:
             new_attendance = Presenca(
