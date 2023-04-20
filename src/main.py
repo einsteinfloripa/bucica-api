@@ -26,7 +26,8 @@ async def start_schedule():
 
     threading.Thread(target=register_student_first_half, daemon=True).start()
     threading.Thread(target=register_student_second_half, daemon=True).start()
-
+    # the keyword daemon=True makes the thread die when the main thread dies
+    # https://www.geeksforgeeks.org/python-daemon-threads/
 
 app.add_middleware(
     CORSMiddleware,
