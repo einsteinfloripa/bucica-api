@@ -20,14 +20,14 @@ async def app_exception_handler(_, exc):
         },
     )
 
-
 @app.on_event("startup")
 async def start_schedule():
     import threading
 
-    threading.Thread(target=register_student_first_half).start()
-    threading.Thread(target=register_student_second_half).start()
-
+    threading.Thread(target=register_student_first_half, daemon=True).start()
+    threading.Thread(target=register_student_second_half, daemon=True).start()
+    # the keyword daemon=True makes the thread die when the main thread dies
+    # https://www.geeksforgeeks.org/python-daemon-threads/
 
 app.add_middleware(
     CORSMiddleware,

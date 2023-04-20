@@ -1,5 +1,5 @@
 # TODO: Arrumar o erro do mypy sobre importação
-import os
+import os   
 
 
 import pytest
@@ -23,6 +23,11 @@ class DbContext:
         self.engine = engine
         self.session = test_session
 
+@pytest.fixture(scope="function")
+def session():
+    db_context = DbContext()
+    yield db_context.session
+    db_context.session.close()
 
 def seed_db_data():
     """Seed database with test data."""

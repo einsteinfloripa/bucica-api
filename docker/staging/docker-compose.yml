@@ -6,6 +6,8 @@ services:
     image: bucica-api-staging
     env_file:
       - ../../.env.staging
+    environment:
+      PYTHONUNBUFFERED: 1
     ports:
       - "${PORT}:${PORT}"
     build:
