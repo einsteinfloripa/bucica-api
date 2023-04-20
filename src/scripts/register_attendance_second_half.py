@@ -5,6 +5,7 @@ from sqlalchemy import func
 
 from src.database.session import SessionLocal
 from src.models.students_model import CadastroAlunos, Presenca
+from src.utils.date_handler import DateHandler
 from src.utils.schedule import LateTypes
 
 
@@ -14,6 +15,11 @@ from src.utils.schedule import LateTypes
 @schedule.repeat(schedule.every().thursday.at("22:01"))
 @schedule.repeat(schedule.every().friday.at("22:01"))
 def register_attendance():
+
+    if DateHandler().is_holiday(datetime.now()):
+        print("Feriado, não serao resgistradas faltas para o segundo turno...")
+        return
+
     print("Registrando faltas para o segundo turno...")
     print('datetime: ', datetime.now())
     db = SessionLocal()
