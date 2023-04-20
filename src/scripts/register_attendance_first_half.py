@@ -38,7 +38,7 @@ def register_attendance():
             .order_by(Presenca.id.desc())
             .first()
         )
-        # breakpoint()
+
 
         if last_attendance is None:
             new_attendance = Presenca(
