@@ -1,7 +1,9 @@
 import datetime
+import mock
 import pytest
 import freezegun
 import schedule
+from sqlalchemy import func
 from src.models.students_model import Presenca
 from src.repositories.attendance_repository import AttendanceRepository
 import src.scripts.register_attendance_first_half as first_half
@@ -217,4 +219,19 @@ class TestScripts:
             assert attendance.created_at == date_time
             assert attendance.first_half == first_half
             assert attendance.late == LateTypes.LATE
+
+
+    # SUPPOSEING "2023-04-10 00:00:00" IS A HOLIDAY
+    @pytest.mark.t
+    @mock.patch('src.utils.date_handler.DateHandler.is_holiday', return_value=True)
+    def test_is_holiday(self, mocked_func, session):
+        with freezegun.freeze_time("2023-04-10 20:01:01") as frozen_datetime:
+            schedule.run_pending()
+            frozen_datetime.tick(delta=datetime.timedelta(hours=2))
+            schedule.run_pending()
+
+        attendances = session.query(Presenca).filter_by(student_id=1).all()
+
+        assert len(attendances) == 0
+        assert mocked_func.called
 
