@@ -13,7 +13,7 @@ from src.utils.date_handler import DateHandler
 @schedule.repeat(schedule.every().tuesday.at("20:01"))
 @schedule.repeat(schedule.every().wednesday.at("20:01"))
 @schedule.repeat(schedule.every().thursday.at("20:01"))
-@schedule.repeat(schedule.every().friday.at("16:06"))
+@schedule.repeat(schedule.every().friday.at("20:01"))
 def register_attendance():
 
     if DateHandler().is_holiday(datetime.now()):
