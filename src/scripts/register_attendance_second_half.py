@@ -47,4 +47,4 @@ def register_student_second_half():
     print("Iniciado Job para registar faltas para o segundo turno...")
     while True:
         schedule.run_pending()
-        time.sleep(1)
+        time.sleep(3)

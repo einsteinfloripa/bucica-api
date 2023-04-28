@@ -13,7 +13,7 @@ from src.utils.schedule import LateTypes
 @schedule.repeat(schedule.every().tuesday.at("20:01"))
 @schedule.repeat(schedule.every().wednesday.at("20:01"))
 @schedule.repeat(schedule.every().thursday.at("20:01"))
-@schedule.repeat(schedule.every().friday.at("20:01"))
+@schedule.repeat(schedule.every().friday.at("16:06"))
 def register_attendance():
     print("Registrando faltas para o primeiro turno...")
     print('datetime: ', datetime.now())
@@ -49,4 +49,4 @@ def register_student_first_half():
     print("Iniciado Job para registar faltas para o primeiro turno...")
     while True:
         schedule.run_pending()
-        time.sleep(1)
+        time.sleep(3)
