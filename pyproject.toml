@@ -16,6 +16,7 @@ python-dotenv = "^1.0.0"
 alembic = "^1.9.4"
 psycopg2-binary = "^2.9.5"
 schedule = "^1.2.0"
+workalendar = "^17.0.0"
 
 [tool.poetry.group.dev.dependencies]
 ipdb = "^0.13.13"
@@ -26,10 +27,10 @@ black = "^23.3.0"
 mypy = "^1.0.1"
 pytest = "^7.2.1"
 pre-commit = "^3.2.1"
-httpx = "^0.23.3"
+httpx = "^0.24.0"
 pytest-dotenv = "^0.5.2"
 pytest-mock = "^3.10.0"
-mock = "^5.0.1"
+mock = "^5.0.2"
 
 [tool.black]
 line-length = 100
