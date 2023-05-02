@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 
 from src.errors.base_exception import AppExceptionBase
 from src.routers.students_router import router as PresencaRouter
+from src.routers.auth_router import router as AuthRouter
 from src.scripts.register_attendance_first_half import register_student_first_half
 from src.scripts.register_attendance_second_half import register_student_second_half
 
@@ -20,6 +21,7 @@ async def app_exception_handler(_, exc):
         },
     )
 
+
 @app.on_event("startup")
 async def start_schedule():
     import threading
@@ -28,6 +30,7 @@ async def start_schedule():
     threading.Thread(target=register_student_second_half, daemon=True).start()
     # the keyword daemon=True makes the thread die when the main thread dies
     # https://www.geeksforgeeks.org/python-daemon-threads/
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -38,3 +41,4 @@ app.add_middleware(
 )
 
 app.include_router(PresencaRouter)
+app.include_router(AuthRouter)
