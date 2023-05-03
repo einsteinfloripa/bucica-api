@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        test_type: [unit, integration]
+        test_type: [unit, integration, scripts]
     env:
       DB_URL: "sqlite:///test.db"
       ADMIN_USERNAME: admin
