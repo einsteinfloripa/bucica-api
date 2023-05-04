@@ -39,8 +39,8 @@ def register_attendance():
             )
 
             db.add(new_attendance)
-            db.commit()
-            db.refresh(new_attendance)
+
+    db.commit()
 
 
 def register_student_second_half():
