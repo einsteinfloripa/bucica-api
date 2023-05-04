@@ -3,13 +3,11 @@ from datetime import datetime, time, timedelta
 
 
 class Late(enum.Enum):
-    ON_TIME = timedelta(seconds=1800)  # 30 minutes
-    HALF_LATE = timedelta(seconds=3900)  # 1 hour and 5 minutes
+    ON_TIME = timedelta(seconds=2100)  # 35 minutes
 
 
 class LateTypes(enum.Enum):
     ON_TIME = "sem atraso"
-    HALF_LATE = "meio atraso"
     LATE = "atrasado"
 
 
@@ -23,12 +21,12 @@ class Weekday(enum.Enum):
 
 class FirstClassHalf(enum.Enum):
     BEGIN = time(17, 45)
-    END = time(20, 00)
+    END = time(18, 20)
 
 
 class SecondClassHalf(enum.Enum):
     BEGIN = time(20, 15)
-    END = time(22, 00)
+    END = time(20, 40)
 
 
 class CourseClass:
@@ -47,15 +45,11 @@ class CourseClass:
         return False
 
     def is_late(self):
-        is_late = datetime.now() - self.start > Late.HALF_LATE.value
-        is_half_late = datetime.now() - self.start <= Late.HALF_LATE.value
+        is_late = datetime.now() - self.start > Late.ON_TIME.value
         is_on_time = datetime.now() - self.start <= Late.ON_TIME.value
 
         if is_late:
             return LateTypes.LATE
-
-        if is_half_late and not is_on_time:
-            return LateTypes.HALF_LATE
 
         if is_on_time:
             return LateTypes.ON_TIME
