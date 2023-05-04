@@ -52,18 +52,6 @@ class TestCourseClass:
                 LateTypes.ON_TIME,
             ),
             (
-                datetime.datetime(2023, 3, 13, 18, 16),
-                FirstClassHalf.BEGIN.value,
-                FirstClassHalf.END.value,
-                LateTypes.HALF_LATE,
-            ),
-            (
-                datetime.datetime(2023, 3, 13, 18, 50),
-                FirstClassHalf.BEGIN.value,
-                FirstClassHalf.END.value,
-                LateTypes.HALF_LATE,
-            ),
-            (
                 datetime.datetime(2023, 3, 13, 18, 51),
                 FirstClassHalf.BEGIN.value,
                 FirstClassHalf.END.value,
@@ -82,18 +70,6 @@ class TestCourseClass:
                 LateTypes.ON_TIME,
             ),
             (
-                datetime.datetime(2023, 3, 13, 20, 46),
-                SecondClassHalf.BEGIN.value,
-                SecondClassHalf.END.value,
-                LateTypes.HALF_LATE,
-            ),
-            (
-                datetime.datetime(2023, 3, 13, 21, 20),
-                SecondClassHalf.BEGIN.value,
-                SecondClassHalf.END.value,
-                LateTypes.HALF_LATE,
-            ),
-            (
                 datetime.datetime(2023, 3, 13, 21, 21),
                 SecondClassHalf.BEGIN.value,
                 SecondClassHalf.END.value,
@@ -106,7 +82,7 @@ class TestCourseClass:
         mocked_time: datetime.datetime,
         start: datetime.time,
         end: datetime.time,
-        expected: Literal[LateTypes.ON_TIME, LateTypes.HALF_LATE, LateTypes.LATE],
+        expected: Literal[LateTypes.ON_TIME, LateTypes.LATE],
     ):
         with mock.patch(
             "src.utils.schedule.datetime",
