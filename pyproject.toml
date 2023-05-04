@@ -13,7 +13,7 @@ uvicorn = "^0.22.0"
 sqlalchemy = "^2.0.12"
 pydantic = "^1.10.7"
 python-dotenv = "^1.0.0"
-alembic = "^1.9.4"
+alembic = "^1.10.4"
 psycopg2-binary = "^2.9.5"
 schedule = "^1.2.0"
 workalendar = "^17.0.0"
@@ -61,4 +61,5 @@ env_files = ".env.test"
 markers = [
   "integration: marks tests as integration (deselect with '-m \"not integration\"')",
   "unit: marks tests as unit (deselect with '-m \"not unit\"')",
+  "scripts: marks tests as script (deselect with '-m \"not script\"')",
 ]

@@ -1,5 +1,5 @@
 # TODO: Arrumar o erro do mypy sobre importação
-import os   
+import os
 
 
 import pytest
@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 
 from src.main import app
 from src.models.base_model import Base
-from src.models.students_model import CadastroAlunos
+from src.models.students_model import CadastroAlunos, Presenca
 
 ### DATA BASE FIXTURES ###
 
@@ -23,11 +23,13 @@ class DbContext:
         self.engine = engine
         self.session = test_session
 
+
 @pytest.fixture(scope="function")
 def session():
     db_context = DbContext()
     yield db_context.session
     db_context.session.close()
+
 
 def seed_db_data():
     """Seed database with test data."""
@@ -69,6 +71,13 @@ def setup_db():
     yield
 
     Base.metadata.drop_all(bind=db_context.engine)
+
+
+@pytest.fixture(autouse=True, scope="function")
+def clear_db(session):
+    yield
+    session.query(Presenca).delete()
+    session.commit()
 
 
 ###
