@@ -16,9 +16,14 @@
     "${workspaceFolder}/src"
   ],
   "mypy.dmypyExecutable": "${workspaceFolder}/.venv/bin/dmypy",
-  "mypy.targets": ["src", "tests"],
+  "mypy.targets": [
+    "src",
+    "tests"
+  ],
   "mypy.runUsingActiveInterpreter": true,
-  "python.linting.ignorePatterns": ["**/alembic/**"],
+  "python.linting.ignorePatterns": [
+    "**/alembic/**"
+  ],
   "search.exclude": {
     "**/node_modules": true,
     "**/.venv": true,
@@ -32,5 +37,8 @@
   "python.linting.enabled": false,
   "[github-actions-workflow]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "cSpell.words": [
+    "SUPPOSEING"
+  ]
 }
