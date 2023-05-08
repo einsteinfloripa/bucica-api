@@ -1,0 +1,49 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: local
+    hooks:
+      - id: Black
+        name: Formatting in Project
+        entry: black
+        args: ["--check", "--diff"]
+        language: system
+        exclude: ^alembic
+        types: [python]
+
+      - id: Pylint
+        name: Linting in Project
+        entry: pylint
+        args:
+          [
+            --rcfile=.pylintrc,
+            --output-format=colorized,
+            --reports=n,
+            --fail-under=7,
+          ]
+        language: system
+        exclude: ^alembic
+        types: [python]
+
+      - id: Mypy
+        name: Type Checking in Project
+        entry: mypy
+        args: ["--namespace-packages"]
+        exclude: ^alembic
+        language: system
+        types: [python]
+
+      # TODO: Desativado por enquanto, pois não foi possível fazer rodar com os related tests
+      # - id: Pytest
+      #   name: Testing in Project
+      #   entry: pytest
+      #   args:
+      #     [
+      #       "--cov=src",
+      #       "--cov-report=term-missing",
+      #       "--cov-report=html",
+      #       "--cov-fail-under=70",
+      #     ]
+      #   language: system
+      #   files: ^tests
+      #   types: [python]

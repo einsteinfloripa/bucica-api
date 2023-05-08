@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  bucica-api-staging:
+    container_name: bucica-api-staging
+    image: bucica-api-staging
+    env_file:
+      - ../../.env.staging
+    environment:
+      PYTHONUNBUFFERED: 1
+    build:
+      context: ../..
+      dockerfile: docker/staging/Dockerfile
+    depends_on:
+      - bucica-postgres-db-staging
+    networks:
+      - bucica-network-staging
+    command: sh -c "poetry run alembic upgrade head && poetry run uvicorn --host 0.0.0.0 --port ${PORT} src.main:app"
+  bucica-postgres-db-staging:
+    container_name: bucica-postgres-db-staging
+    image: postgres:12.2-alpine
+    ports:
+      - "${DB_PORT}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      TZ: America/Sao_Paulo
+      PGTZ: America/Sao_Paulo
+    volumes:
+      - postgres-data-staging:/var/lib/postgresql/data
+    networks:
+      - bucica-network-staging
+
+networks:
+  bucica-network-staging:
+    name: bucica-network-staging
+
+volumes:
+  postgres-data-staging:
