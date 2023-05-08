@@ -10,10 +10,16 @@ from src.errors.students_exception import (
 from src.repositories.attendance_repository import AttendanceRepository
 from src.repositories.students_repository import StudentRepository
 from src.utils.date_handler import DateHandler
-from src.utils.schedule import Schedule
+from src.utils.schedule import Schedule, FirstClassHalf, SecondClassHalf
 
 
 class StudentService:
+
+    first_half_begin = FirstClassHalf.BEGIN.value.strftime("%H:%M")
+    first_half_end = FirstClassHalf.END.value.strftime("%H:%M")
+    second_half_begin = SecondClassHalf.BEGIN.value.strftime("%H:%M")
+    second_half_end = SecondClassHalf.END.value.strftime("%H:%M")
+
     def __init__(
         self,
         student_repository: StudentRepository = Depends(StudentRepository),
@@ -34,7 +40,9 @@ class StudentService:
         current_class = self.schedule.get_current_class()
         if current_class is None:
             raise NotOngoingLesson(
-                "Não há aula em andamento. As presenças só podem ser registradas nos intervalo entre 17:45 até 20:00 e 20:15 até 22:00"
+                "Não há aula em andamento. As presenças só podem ser registradas"
+                + f" nos intervalo entre {self.first_half_begin} até {self.first_half_end}" 
+                + f" e {self.second_half_begin} até {self.second_half_end}"
             )
 
         attendance = self.attendance_repository.get_last_with(student_id=student.id)
