@@ -8,8 +8,6 @@ services:
       - ../../.env.staging
     environment:
       PYTHONUNBUFFERED: 1
-    ports:
-      - "${PORT}:${PORT}"
     build:
       context: ../..
       dockerfile: docker/staging/Dockerfile
