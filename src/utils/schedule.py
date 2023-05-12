@@ -23,10 +23,22 @@ class FirstClassHalf(enum.Enum):
     BEGIN = time(17, 45)
     END = time(18, 20)
 
+    def begin_time_str() -> str:
+        return FirstClassHalf.BEGIN.value.strftime("%H:%M")
+
+    def end_time_str() -> str:
+        return FirstClassHalf.BEGIN.value.strftime("%H:%M")
+
 
 class SecondClassHalf(enum.Enum):
     BEGIN = time(20, 15)
     END = time(20, 40)
+
+    def begin_time_str() -> str:
+        return SecondClassHalf.BEGIN.value.strftime("%H:%M")
+
+    def end_time_str() -> str:
+        return SecondClassHalf.END.value.strftime("%H:%M")
 
 
 class CourseClass:
@@ -62,9 +74,6 @@ class CourseClass:
 
 
 class Schedule:
-    def __init__(self) -> None:
-        pass
-
     def get_current_class(self) -> CourseClass | None:
         MONDAY = [
             CourseClass(Weekday.MONDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value),
