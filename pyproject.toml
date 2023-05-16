@@ -17,6 +17,8 @@ alembic = "^1.10.4"
 psycopg2-binary = "^2.9.5"
 schedule = "^1.2.0"
 workalendar = "^17.0.0"
+google-auth = "^2.18.0"
+google-auth-oauthlib = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
 ipdb = "^0.13.13"
