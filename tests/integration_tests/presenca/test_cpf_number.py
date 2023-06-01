@@ -59,7 +59,7 @@ class TestPresencaCpfNumber:
         assert response_body["app_exception"] == "NotOngoingLesson"
         assert (
             response_body["message"]
-            == "Não há aula em andamento. As presenças só podem ser registradas nos intervalo entre 17:45 até 20:00 e 20:15 até 22:00"
+            == f"Não há aula em andamento. As presenças só podem ser registradas nos intervalo entre {FirstClassHalf.begin_time_str()} até {FirstClassHalf.end_time_str()} e {SecondClassHalf.begin_time_str()} até {SecondClassHalf.end_time_str()}"
         )
 
     @freeze_time("2023-04-10 17:45:00")
