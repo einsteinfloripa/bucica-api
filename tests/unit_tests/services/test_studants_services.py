@@ -167,5 +167,4 @@ class TestStudentService:
         assert mock_attendance_repository.get_last_with.call_count == 1
         assert mock_schedule.get_current_class.call_count == 1
         assert mock_date_handler.is_today.call_count == 1
-        assert mock_date_handler.validate_interval.call_count == 1
         assert mock_attendance_repository.create_attendance.call_count == 1
