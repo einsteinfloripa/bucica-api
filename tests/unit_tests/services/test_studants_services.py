@@ -3,7 +3,7 @@ from faker import Faker
 from pytest_mock import MockerFixture
 from src.errors.students_exception import (
     AttendanceAlreadyConfirmed,
-    NotOngoingLesson,
+    NotOngoingClass,
     StudentNotFound,
 )
 
@@ -102,10 +102,10 @@ class TestStudentService:
             date_handler=mocker.Mock(),
         )
 
-        with pytest.raises(NotOngoingLesson) as app_exception:
+        with pytest.raises(NotOngoingClass) as app_exception:
             service.add_attendance("12345678900")
 
-        assert app_exception.type.__name__ == "NotOngoingLesson"
+        assert app_exception.type.__name__ == "NotOngoingClass"
         assert (
             app_exception.value.message
             == f"Não há aula em andamento. As presenças só podem ser registradas nos intervalo entre {FirstClassHalf.begin_time_str()} até {FirstClassHalf.end_time_str()} e {SecondClassHalf.begin_time_str()} até {SecondClassHalf.end_time_str()}"
