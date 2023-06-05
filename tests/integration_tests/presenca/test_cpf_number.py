@@ -190,6 +190,26 @@ class TestPresencaCpfNumber:
                     "first_half": False,
                 },
             ),
+            (
+                datetime(2023, 4, 14, 21, 00),
+                {
+                    "status_code": 201,
+                    "late": LateTypes.LATE,
+                    "absence": False,
+                    "created_at": datetime(2023, 4, 14, 21, 00),
+                    "first_half": False,
+                },
+            ),
+            (
+                datetime(2023, 4, 14, 18, 30),
+                {
+                    "status_code": 201,
+                    "late": LateTypes.LATE,
+                    "absence": False,
+                    "created_at": datetime(2023, 4, 14, 18, 30),
+                    "first_half": True,
+                },
+            ),
         ],
     )
     def test_attendance_successfully_created_on_time(

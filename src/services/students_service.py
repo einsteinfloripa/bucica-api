@@ -41,9 +41,9 @@ class StudentService:
         attendance = self.attendance_repository.get_last_with(student_id=student.id)
 
         if attendance is not None:
-            is_today = self.date_handler.is_today(attendance.created_at)
+            created_today = self.date_handler.is_today(attendance.created_at)
 
-            if is_today and attendance.first_half:
+            if created_today and attendance.first_half:
                 raise AttendanceAlreadyConfirmed("Presença já confirmada")
 
         self.attendance_repository.create_attendance(student.id, current_class)

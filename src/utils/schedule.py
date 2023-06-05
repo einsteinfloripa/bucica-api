@@ -54,7 +54,7 @@ class CourseClass:
         return False
 
     def is_late(self):
-        is_on_time = datetime.now() - self.start <= self.ON_TIME_TOLERANCE        
+        is_on_time = datetime.now() - self.start <= self.ON_TIME_TOLERANCE 
         if is_on_time:
             return LateTypes.ON_TIME
         else:
