@@ -14,7 +14,6 @@ from src.utils.schedule import Schedule, FirstClassHalf, SecondClassHalf
 
 
 class StudentService:
-
     def __init__(
         self,
         student_repository: StudentRepository = Depends(StudentRepository),
