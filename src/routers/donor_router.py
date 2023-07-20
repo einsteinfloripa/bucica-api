@@ -14,7 +14,6 @@ router = APIRouter()
 @router.post("/donors", name="Donors")
 def add_donor(donor: DonorSchema, repository: DonorRepository = Depends(DonorRepository)):
 
-    print("Called")
     repository.add_donor(donor)
     
     return Response(status_code=201)

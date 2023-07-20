@@ -3,7 +3,6 @@ import pytest
 from tests.conftest import ClientContext
 from src.models.donor_model import DonorModel
 
-@pytest.mark.t
 class TestDonors:
     @pytest.mark.parametrize(
         "nome, quantidade, indicacao, response_code",    
@@ -24,7 +23,6 @@ class TestDonors:
                 "indicacao": indicacao,
             },
         )
-        print(response)
         assert response.status_code == response_code
     
     @pytest.mark.parametrize(
