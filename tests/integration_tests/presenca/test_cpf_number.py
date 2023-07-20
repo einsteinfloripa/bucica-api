@@ -56,7 +56,7 @@ class TestPresencaCpfNumber:
         response_body = response.json()
 
         assert response.status_code == 400
-        assert response_body["app_exception"] == "NotOngoingLesson"
+        assert response_body["app_exception"] == "NotOngoingClass"
         assert (
             response_body["message"]
             == f"Não há aula em andamento. As presenças só podem ser registradas nos intervalo entre {FirstClassHalf.begin_time_str()} até {FirstClassHalf.end_time_str()} e {SecondClassHalf.begin_time_str()} até {SecondClassHalf.end_time_str()}"
@@ -188,6 +188,26 @@ class TestPresencaCpfNumber:
                     "absence": False,
                     "created_at": datetime(2023, 4, 14, 20, 25),
                     "first_half": False,
+                },
+            ),
+            (
+                datetime(2023, 4, 14, 21, 00),
+                {
+                    "status_code": 201,
+                    "late": LateTypes.LATE,
+                    "absence": False,
+                    "created_at": datetime(2023, 4, 14, 21, 00),
+                    "first_half": False,
+                },
+            ),
+            (
+                datetime(2023, 4, 14, 18, 30),
+                {
+                    "status_code": 201,
+                    "late": LateTypes.LATE,
+                    "absence": False,
+                    "created_at": datetime(2023, 4, 14, 18, 30),
+                    "first_half": True,
                 },
             ),
         ],

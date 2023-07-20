@@ -2,10 +2,6 @@ import enum
 from datetime import datetime, time, timedelta
 
 
-class Late(enum.Enum):
-    ON_TIME = timedelta(seconds=2100)  # 35 minutes
-
-
 class LateTypes(enum.Enum):
     ON_TIME = "sem atraso"
     LATE = "atrasado"
@@ -21,7 +17,7 @@ class Weekday(enum.Enum):
 
 class FirstClassHalf(enum.Enum):
     BEGIN = time(17, 45)
-    END = time(18, 20)
+    END = time(20, 00)
 
     def begin_time_str() -> str:
         return FirstClassHalf.BEGIN.value.strftime("%H:%M")
@@ -32,7 +28,7 @@ class FirstClassHalf(enum.Enum):
 
 class SecondClassHalf(enum.Enum):
     BEGIN = time(20, 15)
-    END = time(20, 40)
+    END = time(22, 00)
 
     def begin_time_str() -> str:
         return SecondClassHalf.BEGIN.value.strftime("%H:%M")
@@ -42,6 +38,8 @@ class SecondClassHalf(enum.Enum):
 
 
 class CourseClass:
+    ON_TIME_TOLERANCE = timedelta(seconds=2100)  # 35 minutes
+
     def __init__(self, weekday: int, start_time: time, end_time: time):
         self.start = datetime.combine(datetime.today(), start_time)
         self.end = datetime.combine(datetime.today(), end_time)
@@ -57,14 +55,11 @@ class CourseClass:
         return False
 
     def is_late(self):
-        is_late = datetime.now() - self.start > Late.ON_TIME.value
-        is_on_time = datetime.now() - self.start <= Late.ON_TIME.value
-
-        if is_late:
-            return LateTypes.LATE
-
+        is_on_time = datetime.now() - self.start <= self.ON_TIME_TOLERANCE 
         if is_on_time:
             return LateTypes.ON_TIME
+        else:
+            return LateTypes.LATE
 
     def is_absent(self) -> bool:
         return not self.is_ongoing()
