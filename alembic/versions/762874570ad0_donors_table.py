@@ -22,7 +22,7 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('nome', sa.String(), nullable=False),
     sa.Column('quantidade', sa.Float(), nullable=False),
-    sa.Column('indiacacao', sa.String(), nullable=False),
+    sa.Column('indicacao', sa.String(), nullable=False),
     sa.Column('criado_em', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
