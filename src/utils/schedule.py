@@ -16,14 +16,14 @@ class Weekday(enum.Enum):
 
 
 class FirstClassHalf(enum.Enum):
-    BEGIN = time(17, 45)
+    BEGIN = time(10, 45)
     END = time(20, 00)
 
     def begin_time_str() -> str:
         return FirstClassHalf.BEGIN.value.strftime("%H:%M")
 
     def end_time_str() -> str:
-        return FirstClassHalf.BEGIN.value.strftime("%H:%M")
+        return FirstClassHalf.END.value.strftime("%H:%M")
 
 
 class SecondClassHalf(enum.Enum):
