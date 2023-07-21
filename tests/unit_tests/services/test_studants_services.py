@@ -121,8 +121,7 @@ class TestStudentService:
             get_last_with=mocker.Mock(return_value=attendance_data)
         )
         mock_date_handler = mocker.Mock(
-            is_today=mocker.Mock(return_value=True),
-            validate_interval=mocker.Mock(return_value=True),
+            between=mocker.Mock(return_value=True),
         )
 
         service = StudentService(

@@ -6,11 +6,7 @@ from freezegun import freeze_time
 from src.utils.date_handler import DateHandler
 
 class TestDateHandler:
-    @freeze_time("2021-01-01 12:00:00")
-    def test_is_today(self):
-        date_dadler_instance = DateHandler()
-        today = datetime.now()
-        assert date_dadler_instance.is_today(today)
+    date_handler_instance = DateHandler()
 
     @pytest.mark.parametrize("date_time, expected", [
         (datetime(2023, 1, 1, 12), True), # ano novo
@@ -20,7 +16,14 @@ class TestDateHandler:
         (datetime(2023, 4, 13, 12), False),
     ])
     def test_is_holiday(self, date_time, expected):
-        date_dadler_instance = DateHandler()
-        assert date_dadler_instance.is_holiday(date_time) == expected
+        assert self.date_handler_instance.is_holiday(date_time) == expected
 
+    @pytest.mark.parametrize("date, start, end, expected", [
+        (datetime(2021, 1, 1, 12), datetime(2021, 1, 1, 12), datetime(2021, 1, 1, 13), True),
+        (datetime(2021, 1, 1, 12), datetime(2021, 1, 1, 13), datetime(2021, 1, 1, 14), False),
+        (datetime(2021, 1, 1, 12), datetime(2021, 1, 1, 11), datetime(2021, 1, 1, 12), True),
+        (datetime(2021, 1, 1, 13), datetime(2020, 12, 31, 12), datetime(2020, 12, 31, 14), False),
+    ])
+    def test_between(self, date, start, end, expected):
+        assert self.date_handler_instance.between(date, start, end) == expected
 

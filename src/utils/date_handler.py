@@ -9,9 +9,6 @@ class DateHandler:
     def __init__(self) -> None:
         self.current_datetime = datetime.now()
     
-    def is_today(self, date: datetime) -> bool:
-        return date.date() == self.current_datetime.date()
-    
     def between(self, date: datetime, start: datetime, end: datetime) -> bool:
         return start <= date <= end
 
