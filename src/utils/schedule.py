@@ -16,7 +16,7 @@ class Weekday(enum.Enum):
 
 
 class FirstClassHalf(enum.Enum):
-    BEGIN = time(10, 45)
+    BEGIN = time(17, 45)
     END = time(20, 00)
 
     def begin_time_str() -> str:
