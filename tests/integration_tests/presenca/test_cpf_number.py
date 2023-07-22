@@ -2,7 +2,6 @@ import pytest
 
 from datetime import datetime
 from freezegun import freeze_time
-from src.models.students_model import Presenca
 
 from src.repositories.attendance_repository import AttendanceRepository
 from src.utils.schedule import (
@@ -220,7 +219,7 @@ class TestPresencaCpfNumber:
     ):
         with freeze_time(request_time):
             response = client_context.client.post(
-                f"/presenca/11122233344", auth=client_context.credentials
+                "/presenca/11122233344", auth=client_context.credentials
             )
 
         attendance = attendance_repository.get_last_with(student_id=1)
