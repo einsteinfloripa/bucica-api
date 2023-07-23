@@ -2,7 +2,6 @@ import pytest
 
 from datetime import datetime
 from freezegun import freeze_time
-from src.models.students_model import Presenca
 
 from src.repositories.attendance_repository import AttendanceRepository
 from src.utils.schedule import (
@@ -56,7 +55,7 @@ class TestPresencaCpfNumber:
         response_body = response.json()
 
         assert response.status_code == 400
-        assert response_body["app_exception"] == "NotOngoingLesson"
+        assert response_body["app_exception"] == "NotOngoingClass"
         assert (
             response_body["message"]
             == f"Não há aula em andamento. As presenças só podem ser registradas nos intervalo entre {FirstClassHalf.begin_time_str()} até {FirstClassHalf.end_time_str()} e {SecondClassHalf.begin_time_str()} até {SecondClassHalf.end_time_str()}"
@@ -190,6 +189,26 @@ class TestPresencaCpfNumber:
                     "first_half": False,
                 },
             ),
+            (
+                datetime(2023, 4, 14, 21, 00),
+                {
+                    "status_code": 201,
+                    "late": LateTypes.LATE,
+                    "absence": False,
+                    "created_at": datetime(2023, 4, 14, 21, 00),
+                    "first_half": False,
+                },
+            ),
+            (
+                datetime(2023, 4, 14, 18, 30),
+                {
+                    "status_code": 201,
+                    "late": LateTypes.LATE,
+                    "absence": False,
+                    "created_at": datetime(2023, 4, 14, 18, 30),
+                    "first_half": True,
+                },
+            ),
         ],
     )
     def test_attendance_successfully_created_on_time(
@@ -200,7 +219,7 @@ class TestPresencaCpfNumber:
     ):
         with freeze_time(request_time):
             response = client_context.client.post(
-                f"/presenca/11122233344", auth=client_context.credentials
+                "/presenca/11122233344", auth=client_context.credentials
             )
 
         attendance = attendance_repository.get_last_with(student_id=1)

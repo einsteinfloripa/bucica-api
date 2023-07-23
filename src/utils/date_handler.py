@@ -9,11 +9,8 @@ class DateHandler:
     def __init__(self) -> None:
         self.current_datetime = datetime.now()
     
-    def is_today(self, date: datetime) -> bool:
-        return date.date() == self.current_datetime.date()
-    
-    def validate_interval(self, time: time, start: time, end: time) -> bool:
-        return start <= time <= end
+    def between(self, date: datetime, start: datetime, end: datetime) -> bool:
+        return start <= date <= end
 
     def is_holiday(self, date_time: datetime) -> bool:
         '''
@@ -31,3 +28,4 @@ class DateHandler:
             (datetime.date(2023, 12, 25), 'Christmas Day')
         '''
         return self.work_calendar.is_holiday(date_time)
+    

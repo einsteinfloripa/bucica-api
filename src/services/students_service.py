@@ -4,7 +4,7 @@ from fastapi import Depends
 
 from src.errors.students_exception import (
     AttendanceAlreadyConfirmed,
-    NotOngoingLesson,
+    NotOngoingClass,
     StudentNotFound,
 )
 from src.repositories.attendance_repository import AttendanceRepository
@@ -33,18 +33,17 @@ class StudentService:
 
         current_class = self.schedule.get_current_class()
         if current_class is None:
-            raise NotOngoingLesson(
+            raise NotOngoingClass(
                 f"Não há aula em andamento. As presenças só podem ser registradas nos intervalo entre {FirstClassHalf.begin_time_str()} até {FirstClassHalf.end_time_str()} e {SecondClassHalf.begin_time_str()} até {SecondClassHalf.end_time_str()}"
             )
 
         attendance = self.attendance_repository.get_last_with(student_id=student.id)
 
         if attendance is not None:
-            is_today = self.date_handler.is_today(attendance.created_at)
-            is_first_half = self.date_handler.validate_interval(
+            is_attendance_class_ongoing = self.date_handler.between(
                 attendance.created_at, current_class.start, current_class.end
             )
-            if is_today and is_first_half:
+            if is_attendance_class_ongoing:
                 raise AttendanceAlreadyConfirmed("Presença já confirmada")
 
         self.attendance_repository.create_attendance(student.id, current_class)
