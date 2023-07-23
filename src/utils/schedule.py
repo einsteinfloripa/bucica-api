@@ -23,7 +23,7 @@ class FirstClassHalf(enum.Enum):
         return FirstClassHalf.BEGIN.value.strftime("%H:%M")
 
     def end_time_str() -> str:
-        return FirstClassHalf.BEGIN.value.strftime("%H:%M")
+        return FirstClassHalf.END.value.strftime("%H:%M")
 
 
 class SecondClassHalf(enum.Enum):

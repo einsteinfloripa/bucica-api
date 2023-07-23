@@ -121,8 +121,7 @@ class TestStudentService:
             get_last_with=mocker.Mock(return_value=attendance_data)
         )
         mock_date_handler = mocker.Mock(
-            is_today=mocker.Mock(return_value=True),
-            validate_interval=mocker.Mock(return_value=True),
+            between=mocker.Mock(return_value=True),
         )
 
         service = StudentService(
@@ -134,6 +133,7 @@ class TestStudentService:
 
         with pytest.raises(AttendanceAlreadyConfirmed) as app_exception:
             service.add_attendance("12345678900")
+        
         assert app_exception.type.__name__ == "AttendanceAlreadyConfirmed"
         assert app_exception.value.message == "Presença já confirmada"
         assert app_exception.value.status_code == 400
@@ -143,16 +143,14 @@ class TestStudentService:
         mocker: MockerFixture,
         student_data,
         course_class_data,
-        attendance_data,
     ):
         mock_student_repository = mocker.Mock(get_by_cpf=mocker.Mock(return_value=student_data))
         mock_schedule = mocker.Mock(get_current_class=mocker.Mock(return_value=course_class_data))
         mock_attendance_repository = mocker.Mock(
-            get_last_with=mocker.Mock(return_value=attendance_data)
+            get_last_with=mocker.Mock(return_value=None)
         )
         mock_date_handler = mocker.Mock(
-            is_today=mocker.Mock(return_value=False),
-            validate_interval=mocker.Mock(return_value=False),
+            between = mocker.Mock(return_value=False),
         )
 
         service = StudentService(
@@ -166,5 +164,4 @@ class TestStudentService:
         assert mock_student_repository.get_by_cpf.call_count == 1
         assert mock_attendance_repository.get_last_with.call_count == 1
         assert mock_schedule.get_current_class.call_count == 1
-        assert mock_date_handler.is_today.call_count == 1
         assert mock_attendance_repository.create_attendance.call_count == 1
