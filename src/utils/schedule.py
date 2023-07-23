@@ -26,6 +26,7 @@ class FirstClassHalf(enum.Enum):
         return FirstClassHalf.END.value.strftime("%H:%M")
 
 
+
 class SecondClassHalf(enum.Enum):
     BEGIN = time(20, 15)
     END = time(22, 00)
