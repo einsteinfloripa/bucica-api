@@ -44,11 +44,11 @@ def register_attendance():
 
 
 def register_student_second_half():
-    schedule.every().monday.at("20:41").do(register_attendance)
-    schedule.every().tuesday.at("20:41").do(register_attendance)
-    schedule.every().wednesday.at("20:41").do(register_attendance)
-    schedule.every().thursday.at("20:41").do(register_attendance)
-    schedule.every().friday.at("20:41").do(register_attendance)
+    schedule.every().monday.at("22:01").do(register_attendance)
+    schedule.every().tuesday.at("22:01").do(register_attendance)
+    schedule.every().wednesday.at("22:01").do(register_attendance)
+    schedule.every().thursday.at("22:01").do(register_attendance)
+    schedule.every().friday.at("22:01").do(register_attendance)
 
     print("Iniciado Job para registar faltas para o segundo turno...")
     while True:
