@@ -1,24 +1,29 @@
-from datetime import datetime, time
+from datetime import datetime, date
 
 import pytest
 from freezegun import freeze_time
 
 from src.utils.date_handler import DateHandler
 
-@freeze_time("2021-01-01 12:00:00")
 class TestDateHandler:
-    def test_is_today(self):
-        date_dadler_instance = DateHandler()
-        today = datetime.now()
-        assert date_dadler_instance.is_today(today)
+    date_handler_instance = DateHandler()
 
-    @pytest.mark.parametrize("time, start, end, expected", [
-        (time(12, 0, 0), time(10, 0, 0), time(14, 0, 0), True),
-        (time(8, 0, 0), time(10, 0, 0), time(14, 0, 0), False),
-        (time(16, 0, 0), time(10, 0, 0), time(14, 0, 0), False),
-        (time(10, 0, 0), time(10, 0, 0), time(14, 0, 0), True),
-        (time(14, 0, 0), time(10, 0, 0), time(14, 0, 0), True),
+    @pytest.mark.parametrize("date_time, expected", [
+        (datetime(2023, 1, 1, 12), True), # ano novo
+        (datetime(2023, 4, 21, 12), True), # tiradentes
+        (datetime(2023, 6, 2, 12), False),
+        (datetime(2023, 9, 7, 12), True), # independencia
+        (datetime(2023, 4, 13, 12), False),
     ])
-    def test_validate_interval(self, time, start, end, expected):
-        date_dadler_instance = DateHandler()
-        assert date_dadler_instance.validate_interval(time, start, end) == expected
+    def test_is_holiday(self, date_time, expected):
+        assert self.date_handler_instance.is_holiday(date_time) == expected
+
+    @pytest.mark.parametrize("date, start, end, expected", [
+        (datetime(2021, 1, 1, 12), datetime(2021, 1, 1, 12), datetime(2021, 1, 1, 13), True),
+        (datetime(2021, 1, 1, 12), datetime(2021, 1, 1, 13), datetime(2021, 1, 1, 14), False),
+        (datetime(2021, 1, 1, 12), datetime(2021, 1, 1, 11), datetime(2021, 1, 1, 12), True),
+        (datetime(2021, 1, 1, 13), datetime(2020, 12, 31, 12), datetime(2020, 12, 31, 14), False),
+    ])
+    def test_between(self, date, start, end, expected):
+        assert self.date_handler_instance.between(date, start, end) == expected
+
