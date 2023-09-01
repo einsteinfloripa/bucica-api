@@ -51,6 +51,4 @@ def register_student_second_half():
     schedule.every().friday.at("22:01").do(register_attendance)
 
     print("Iniciado Job para registar faltas para o segundo turno...")
-    while True:
-        schedule.run_pending()
-        time.sleep(3)
+

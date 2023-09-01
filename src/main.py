@@ -8,6 +8,7 @@ from src.routers.auth_router import router as AuthRouter
 from src.routers.donor_router import router as DonorRouter
 from src.scripts.register_attendance_first_half import register_student_first_half
 from src.scripts.register_attendance_second_half import register_student_second_half
+from src.scripts.update_attendance_loop import update_attendance_loop
 
 app = FastAPI()
 
@@ -27,8 +28,10 @@ async def app_exception_handler(_, exc):
 async def start_schedule():
     import threading
 
-    threading.Thread(target=register_student_first_half, daemon=True).start()
-    threading.Thread(target=register_student_second_half, daemon=True).start()
+    register_student_first_half()
+    register_student_second_half()
+
+    threading.Thread(target=update_attendance_loop, daemon=True).start()
     # the keyword daemon=True makes the thread die when the main thread dies
     # https://www.geeksforgeeks.org/python-daemon-threads/
 

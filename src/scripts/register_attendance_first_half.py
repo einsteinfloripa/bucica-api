@@ -48,9 +48,7 @@ def register_student_first_half():
     schedule.every().tuesday.at("20:01").do(register_attendance)
     schedule.every().wednesday.at("20:01").do(register_attendance)
     schedule.every().thursday.at("20:01").do(register_attendance)
-    schedule.every().friday.at("20:01").do(register_attendance)
+    schedule.every().friday.at("15:30").do(register_attendance)
 
     print("Iniciado Job para registar faltas para o primeiro turno...")
-    while True:
-        schedule.run_pending()
-        time.sleep(3)
+
