@@ -224,6 +224,7 @@ files = [
 name = "dill"
 version = "0.3.7"
 description = "serialize all of Python"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
