@@ -9,6 +9,7 @@ from src.routers.donor_router import router as DonorRouter
 from src.scripts.register_attendance_first_half import register_student_first_half
 from src.scripts.register_attendance_second_half import register_student_second_half
 from src.scripts.update_attendance_loop import update_attendance_loop
+from src.database.sheet import Sheet
 
 app = FastAPI()
 
@@ -30,6 +31,7 @@ async def start_schedule():
 
     register_student_first_half()
     register_student_second_half()
+    Sheet.update_sheet_schedule()
 
     threading.Thread(target=update_attendance_loop, daemon=True).start()
     # the keyword daemon=True makes the thread die when the main thread dies

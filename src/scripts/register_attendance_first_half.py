@@ -1,5 +1,4 @@
 from datetime import date, datetime
-import time
 import schedule
 from sqlalchemy import func
 
@@ -7,7 +6,7 @@ from src.database.session import SessionLocal
 from src.models.students_model import CadastroAlunos, Presenca
 from src.utils.schedule import LateTypes
 from src.utils.date_handler import DateHandler
-
+from src.database.sheet import Sheet, AttendanceData
 
 def register_attendance():
     if DateHandler().is_holiday(datetime.now()):
@@ -39,6 +38,15 @@ def register_attendance():
             )
 
             db.add(new_attendance)
+            Sheet.push(
+                AttendanceData(
+                    new_attendance.student_id,
+                    new_attendance.first_half,
+                    new_attendance.absence,
+                    new_attendance.late.value,
+                    str(new_attendance.created_at),
+                )
+            )
 
     db.commit()
 
