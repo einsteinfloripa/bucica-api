@@ -38,7 +38,7 @@ def register_attendance():
             )
 
             db.add(new_attendance)
-            Sheet.push(
+            Sheet.push_attendance(
                 AttendanceData(
                     new_attendance.student_id,
                     new_attendance.first_half,
