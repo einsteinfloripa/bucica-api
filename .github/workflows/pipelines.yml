@@ -86,8 +86,8 @@ jobs:
           envkey_ADMIN_USERNAME: ${{ vars.ADMIN_USERNAME }}
           envkey_ADMIN_PASSWORD: ${{ vars.ADMIN_PASSWORD }}
           envkey_SHEET_ID: ${{ vars.SHEET_ID }}
-          envkey_SECRET_KEY: ${{ secrets.PRIVATE_KEY }}
-          envkey_SECRET_KEY_ID: ${{ secrets.PRIVATE_KEY_ID }}
+          envkey_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          envkey_PRIVATE_KEY_ID: ${{ secrets.PRIVATE_KEY_ID }}
           file_name: .env.production
           fail_on_empty: true
 
@@ -124,8 +124,8 @@ jobs:
           envkey_ADMIN_USERNAME: ${{ vars.ADMIN_USERNAME }}
           envkey_ADMIN_PASSWORD: ${{ vars.ADMIN_PASSWORD }}
           envkey_SHEET_ID: ${{ vars.SHEET_ID }}
-          envkey_SECRET_KEY: ${{ secrets.PRIVATE_KEY }}
-          envkey_SECRET_KEY_ID: ${{ secrets.PRIVATE_KEY_ID }}
+          envkey_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          envkey_PRIVATE_KEY_ID: ${{ secrets.PRIVATE_KEY_ID }}
           file_name: .env.staging
           fail_on_empty: true
 
