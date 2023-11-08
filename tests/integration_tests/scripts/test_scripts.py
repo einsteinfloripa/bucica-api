@@ -3,9 +3,11 @@ import mock
 import pytest
 import freezegun
 import schedule
-from src.models.students_model import Presenca
 import src.scripts.register_attendance_first_half as first_half
 import src.scripts.register_attendance_second_half as second_half
+
+from pytest_mock import MockerFixture
+from src.models.students_model import Presenca
 from src.utils.schedule import LateTypes
 
 from tests.conftest import ClientContext, DbContext
