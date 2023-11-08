@@ -49,7 +49,7 @@ def insert_attendance(attendance_args, session):
 @pytest.mark.scripts
 @pytest.mark.usefixtures("register_mock")
 class TestScripts:
-    def test_student_absent_in_both_classes(self, session):
+    def test_student_absent_in_both_classes(self, session, mocker: MockerFixture):
         with freezegun.freeze_time("2023-04-10 20:01:01") as frozen_datetime:
             schedule.run_pending()
             frozen_datetime.tick(delta=datetime.timedelta(hours=2))
@@ -70,7 +70,7 @@ class TestScripts:
         assert second_attendance.first_half == False
         assert second_attendance.late == LateTypes.LATE
 
-    def test_student_absent_in_second_class(self, session):
+    def test_student_absent_in_second_class(self, session, mocker, client_context):
         with freezegun.freeze_time("2023-04-10 18:00") as frozen_datetime:
             client_context.client.post(
                 "/presenca/11122233344", auth=client_context.credentials
@@ -100,7 +100,7 @@ class TestScripts:
         assert second_attendance.first_half == False
         assert second_attendance.late == LateTypes.LATE
 
-    def test_student_absent_in_first_class(self, session):
+    def test_student_absent_in_first_class(self, session, mocker, client_context):
         with freezegun.freeze_time("2023-04-10 18:00") as frozen_datetime:
             schedule.run_pending()
 
@@ -132,7 +132,7 @@ class TestScripts:
         assert second_attendance.first_half == False
         assert second_attendance.late == LateTypes.ON_TIME
 
-    def test_student_present_in_both_classes(self, session):
+    def test_student_present_in_both_classes(self, session, mocker, client_context):
         with freezegun.freeze_time("2023-04-10 18:00") as frozen_datetime:
             client_context.client.post(
                 "/presenca/11122233344", auth=client_context.credentials
@@ -167,7 +167,7 @@ class TestScripts:
         assert second_attendance.first_half == False
         assert second_attendance.late == LateTypes.ON_TIME
 
-    def test_student_absent_all_week(self, session):
+    def test_student_absent_all_week(self, session, mocker):
         NUMBER_OF_CLASS_DAYS = 5
         date_times = []
         is_first_half = []
