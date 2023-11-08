@@ -8,6 +8,8 @@ import src.scripts.register_attendance_first_half as first_half
 import src.scripts.register_attendance_second_half as second_half
 from src.utils.schedule import LateTypes
 
+from tests.conftest import ClientContext, DbContext
+
 
 @pytest.fixture
 @freezegun.freeze_time("2023-04-10 00:00:00")  # Monday
@@ -70,14 +72,8 @@ class TestScripts:
 
     def test_student_absent_in_second_class(self, session):
         with freezegun.freeze_time("2023-04-10 18:00") as frozen_datetime:
-            insert_attendance(
-                {
-                    "id": 1,
-                    "first_half": True,
-                    "absence": False,
-                    "late": LateTypes.ON_TIME,
-                },
-                session=session,
+            client_context.client.post(
+                "/presenca/11122233344", auth=client_context.credentials
             )
             schedule.run_pending()
 
@@ -114,14 +110,8 @@ class TestScripts:
             schedule.run_pending()
 
             frozen_datetime.tick(delta=datetime.timedelta(minutes=20))  # 20:21:01
-            insert_attendance(
-                {
-                    "id": 1,
-                    "first_half": False,
-                    "absence": False,
-                    "late": LateTypes.ON_TIME,
-                },
-                session=session,
+            client_context.client.post(
+                "/presenca/11122233344", auth=client_context.credentials
             )
 
             frozen_datetime.tick(delta=datetime.timedelta(hours=2))  # 22:01:01
@@ -144,14 +134,8 @@ class TestScripts:
 
     def test_student_present_in_both_classes(self, session):
         with freezegun.freeze_time("2023-04-10 18:00") as frozen_datetime:
-            insert_attendance(
-                {
-                    "id": 1,
-                    "first_half": True,
-                    "absence": False,
-                    "late": LateTypes.ON_TIME,
-                },
-                session=session,
+            client_context.client.post(
+                "/presenca/11122233344", auth=client_context.credentials
             )
             schedule.run_pending()
 
@@ -161,14 +145,8 @@ class TestScripts:
             schedule.run_pending()
 
             frozen_datetime.tick(delta=datetime.timedelta(minutes=20))  # 20:21:01
-            insert_attendance(
-                {
-                    "id": 1,
-                    "first_half": False,
-                    "absence": False,
-                    "late": LateTypes.ON_TIME,
-                },
-                session=session,
+            client_context.client.post(
+                "/presenca/11122233344", auth=client_context.credentials
             )
 
             frozen_datetime.tick(delta=datetime.timedelta(hours=2))  # 22:01:01
