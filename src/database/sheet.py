@@ -46,11 +46,17 @@ class SheetClass:
         spreadsheet = client.open_by_key(cls.__sheet_id)
         worksheet = spreadsheet.worksheet('Raw')
         
+        rows = []
         for attendance in cls.__attendance_buffer:
-            print(attendance)
-            worksheet.append_row(
+            rows.append(
                 [ attendance.late , attendance.student_id, attendance.absence, attendance.created_at, attendance.first_half ]
             )
+
+        worksheet.append_rows(rows)
+
+        for attendance in rows:
+            print(attendance)
+
         cls.__attendance_buffer.clear()
 
 Sheet = SheetClass()
