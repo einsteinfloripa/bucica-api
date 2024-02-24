@@ -7,6 +7,7 @@ from src.models.students_model import Presenca
 import src.scripts.register_attendance_first_half as first_half
 import src.scripts.register_attendance_second_half as second_half
 from src.utils.schedule import LateTypes
+from src.utils.schedule import CourseClass, FirstClassHalf, Weekday, SecondClassHalf
 
 
 @pytest.fixture
@@ -68,17 +69,15 @@ class TestScripts:
         assert second_attendance.first_half == False
         assert second_attendance.late == LateTypes.LATE
 
-    def test_student_absent_in_second_class(self, session):
+    def test_student_absent_in_second_class(self, session, client_context):
         with freezegun.freeze_time("2023-04-10 18:00") as frozen_datetime:
-            insert_attendance(
-                {
-                    "id": 1,
-                    "first_half": True,
-                    "absence": False,
-                    "late": LateTypes.ON_TIME,
-                },
-                session=session,
-            )
+            with mock.patch(
+                "src.utils.schedule.Schedule.get_current_class",
+                return_value=CourseClass(
+                    Weekday.MONDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value
+                ),
+            ):
+                client_context.client.post("/presenca/11122233344", auth=client_context.credentials)
             schedule.run_pending()
 
             frozen_datetime.tick(
@@ -104,7 +103,7 @@ class TestScripts:
         assert second_attendance.first_half == False
         assert second_attendance.late == LateTypes.LATE
 
-    def test_student_absent_in_first_class(self, session):
+    def test_student_absent_in_first_class(self, session, client_context):
         with freezegun.freeze_time("2023-04-10 18:00") as frozen_datetime:
             schedule.run_pending()
 
@@ -114,15 +113,14 @@ class TestScripts:
             schedule.run_pending()
 
             frozen_datetime.tick(delta=datetime.timedelta(minutes=20))  # 20:21:01
-            insert_attendance(
-                {
-                    "id": 1,
-                    "first_half": False,
-                    "absence": False,
-                    "late": LateTypes.ON_TIME,
-                },
-                session=session,
-            )
+
+            with mock.patch(
+                "src.utils.schedule.Schedule.get_current_class",
+                return_value=CourseClass(
+                    Weekday.MONDAY.value, SecondClassHalf.BEGIN.value, SecondClassHalf.END.value
+                ),
+            ):
+                client_context.client.post("/presenca/11122233344", auth=client_context.credentials)
 
             frozen_datetime.tick(delta=datetime.timedelta(hours=2))  # 22:01:01
             schedule.run_pending()
@@ -142,17 +140,15 @@ class TestScripts:
         assert second_attendance.first_half == False
         assert second_attendance.late == LateTypes.ON_TIME
 
-    def test_student_present_in_both_classes(self, session):
+    def test_student_present_in_both_classes(self, session, client_context):
         with freezegun.freeze_time("2023-04-10 18:00") as frozen_datetime:
-            insert_attendance(
-                {
-                    "id": 1,
-                    "first_half": True,
-                    "absence": False,
-                    "late": LateTypes.ON_TIME,
-                },
-                session=session,
-            )
+            with mock.patch(
+                "src.utils.schedule.Schedule.get_current_class",
+                return_value=CourseClass(
+                    Weekday.MONDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value
+                ),
+            ):
+                client_context.client.post("/presenca/11122233344", auth=client_context.credentials)
             schedule.run_pending()
 
             frozen_datetime.tick(
@@ -161,15 +157,14 @@ class TestScripts:
             schedule.run_pending()
 
             frozen_datetime.tick(delta=datetime.timedelta(minutes=20))  # 20:21:01
-            insert_attendance(
-                {
-                    "id": 1,
-                    "first_half": False,
-                    "absence": False,
-                    "late": LateTypes.ON_TIME,
-                },
-                session=session,
-            )
+
+            with mock.patch(
+                "src.utils.schedule.Schedule.get_current_class",
+                return_value=CourseClass(
+                    Weekday.MONDAY.value, SecondClassHalf.BEGIN.value, SecondClassHalf.END.value
+                ),
+            ):
+                client_context.client.post("/presenca/11122233344", auth=client_context.credentials)
 
             frozen_datetime.tick(delta=datetime.timedelta(hours=2))  # 22:01:01
             schedule.run_pending()
@@ -214,7 +209,7 @@ class TestScripts:
             assert attendance.first_half == first_half
             assert attendance.late == LateTypes.LATE
 
-    # SUPPOSEING "2023-04-10 00:00:00" IS A HOLIDAY
+    # SUPPOSING "2023-04-10 00:00:00" IS A HOLIDAY
     @mock.patch("src.utils.date_handler.DateHandler.is_holiday", return_value=True)
     def test_is_holiday(self, mocked_func, session):
         with freezegun.freeze_time("2023-04-10 20:01:01") as frozen_datetime:
