@@ -33,17 +33,16 @@ repos:
         language: system
         types: [python]
 
-      # TODO: Desativado por enquanto, pois não foi possível fazer rodar com os related tests
-      # - id: Pytest
-      #   name: Testing in Project
-      #   entry: pytest
-      #   args:
-      #     [
-      #       "--cov=src",
-      #       "--cov-report=term-missing",
-      #       "--cov-report=html",
-      #       "--cov-fail-under=70",
-      #     ]
-      #   language: system
-      #   files: ^tests
-      #   types: [python]
+      - id: Pytest
+        name: Testing in Project
+        entry: pytest
+        args:
+          [
+            "--cov=src",
+            "--cov-report=term-missing",
+            "--cov-report=html",
+            "--cov-fail-under=70",
+          ]
+        language: system
+        files: ^tests
+        types: [python]
