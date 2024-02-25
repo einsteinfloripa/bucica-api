@@ -108,7 +108,9 @@ class TestStudentService:
         assert app_exception.type.__name__ == "NotOngoingClass"
         assert (
             app_exception.value.message
-            == f"Não há aula em andamento. As presenças só podem ser registradas nos intervalo entre {FirstClassHalf.begin_time_str()} até {FirstClassHalf.end_time_str()} e {SecondClassHalf.begin_time_str()} até {SecondClassHalf.end_time_str()}"
+            == f"Não há aula em andamento. As presenças só podem ser registradas nos intervalo entre \
+{FirstClassHalf.begin_time_str()} até {FirstClassHalf.end_time_str()} e \
+{SecondClassHalf.begin_time_str()} até {SecondClassHalf.end_time_str()}"
         )
         assert app_exception.value.status_code == 400
 
@@ -133,7 +135,7 @@ class TestStudentService:
 
         with pytest.raises(AttendanceAlreadyConfirmed) as app_exception:
             service.add_attendance("12345678900")
-        
+
         assert app_exception.type.__name__ == "AttendanceAlreadyConfirmed"
         assert app_exception.value.message == "Presença já confirmada"
         assert app_exception.value.status_code == 400
@@ -146,11 +148,9 @@ class TestStudentService:
     ):
         mock_student_repository = mocker.Mock(get_by_cpf=mocker.Mock(return_value=student_data))
         mock_schedule = mocker.Mock(get_current_class=mocker.Mock(return_value=course_class_data))
-        mock_attendance_repository = mocker.Mock(
-            get_last_with=mocker.Mock(return_value=None)
-        )
+        mock_attendance_repository = mocker.Mock(get_last_with=mocker.Mock(return_value=None))
         mock_date_handler = mocker.Mock(
-            between = mocker.Mock(return_value=False),
+            between=mocker.Mock(return_value=False),
         )
 
         service = StudentService(

@@ -1,4 +1,3 @@
-# TODO: Arrumar o erro do mypy sobre importação
 import os
 
 

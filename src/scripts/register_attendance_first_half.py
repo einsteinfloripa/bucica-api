@@ -10,6 +10,9 @@ from src.utils.date_handler import DateHandler
 
 
 def register_attendance():
+    if DateHandler().in_vacation_time():
+        print("Férias, não serão registradas faltas para o primeiro turno...")
+        return
     if DateHandler().is_holiday(datetime.now()):
         print("Feriado, não serão registradas faltas para o primeiro turno...")
         return

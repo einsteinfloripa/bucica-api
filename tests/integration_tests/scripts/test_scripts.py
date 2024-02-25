@@ -13,7 +13,6 @@ from src.utils.schedule import CourseClass, FirstClassHalf, Weekday, SecondClass
 @pytest.fixture
 @freezegun.freeze_time("2023-04-10 00:00:00")  # Monday
 def register_mock():
-    # TODO: Refatorar isso, pois foi mudado a implementação para não usar decorators
     @schedule.repeat(schedule.every().monday.at("20:01"))
     @schedule.repeat(schedule.every().tuesday.at("20:01"))
     @schedule.repeat(schedule.every().wednesday.at("20:01"))
@@ -22,7 +21,6 @@ def register_mock():
     def mocked_register_student_first_half():
         first_half.register_attendance()
 
-    # TODO: Refatorar isso, pois foi mudado a implementação para não usar decorators
     @schedule.repeat(schedule.every().monday.at("22:01"))
     @schedule.repeat(schedule.every().tuesday.at("22:01"))
     @schedule.repeat(schedule.every().wednesday.at("22:01"))
@@ -189,7 +187,7 @@ class TestScripts:
         date_times = []
         is_first_half = []
         with freezegun.freeze_time("2023-04-10 20:01:01") as frozen_datetime:
-            for day in range(NUMBER_OF_CLASS_DAYS):
+            for _ in range(NUMBER_OF_CLASS_DAYS):
                 schedule.run_pending()  # 20:01:01
                 date_times.append(datetime.datetime.now())
                 is_first_half.append(True)

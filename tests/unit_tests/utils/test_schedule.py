@@ -185,10 +185,12 @@ class TestSchedule:
     def test_get_current_class_with_mocked_values(
         self, mocked_function_return, start, end, weekday
     ):
-        with mock.patch(
-            "src.utils.schedule.CourseClass.is_ongoing", side_effect=mocked_function_return
-        ):
-            current_class = Schedule().get_current_class()
+        with mock.patch("src.utils.date_handler.DateHandler.in_vacation_time", return_value=False):
+            with mock.patch(
+                "src.utils.schedule.CourseClass.is_ongoing", side_effect=mocked_function_return
+            ):
+                current_class = Schedule().get_current_class()
+        assert current_class is not None
         assert current_class.weekday == weekday
         assert current_class.start.time() == start
         assert current_class.end.time() == end
