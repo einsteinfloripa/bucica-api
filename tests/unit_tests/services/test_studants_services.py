@@ -59,22 +59,6 @@ class TestStudentService:
         presenca.id = 1
         return presenca
 
-    @pytest.fixture
-    def mock_schedule(self):
-        pass
-
-    @pytest.fixture
-    def mock_student_repository(self):
-        pass
-
-    @pytest.fixture
-    def mock_attendance_repository(self):
-        pass
-
-    @pytest.fixture
-    def mock_date_handler(self):
-        pass
-
     def test_student_not_found(self, mocker: MockerFixture):
         mock_student_repository = mocker.Mock(get_by_cpf=mocker.Mock(return_value=None))
 

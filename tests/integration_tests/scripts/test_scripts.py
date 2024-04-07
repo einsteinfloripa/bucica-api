@@ -3,11 +3,15 @@ import mock
 import pytest
 import freezegun
 import schedule
-from src.models.students_model import Presenca
 import src.scripts.register_attendance_first_half as first_half
 import src.scripts.register_attendance_second_half as second_half
+
+from pytest_mock import MockerFixture
+from src.models.students_model import Presenca
 from src.utils.schedule import LateTypes
 from src.utils.schedule import CourseClass, FirstClassHalf, Weekday, SecondClassHalf
+
+from tests.conftest import ClientContext, DbContext
 
 
 @pytest.fixture
@@ -29,7 +33,6 @@ def register_mock():
     def mocked_register_student_second_half():
         second_half.register_attendance()
 
-
 def insert_attendance(attendance_args, session):
     attendance = Presenca(
         student_id=attendance_args["id"],
@@ -46,7 +49,10 @@ def insert_attendance(attendance_args, session):
 @pytest.mark.scripts
 @pytest.mark.usefixtures("register_mock")
 class TestScripts:
-    def test_student_absent_in_both_classes(self, session):
+    def test_student_absent_in_both_classes(self, session, mocker: MockerFixture):
+        sheet_push_attendance_mock = mocker.patch(
+            "src.database.sheet.Sheet.push_attendance"
+        )
         with freezegun.freeze_time("2023-04-10 20:01:01") as frozen_datetime:
             schedule.run_pending()
             frozen_datetime.tick(delta=datetime.timedelta(hours=2))
@@ -182,7 +188,11 @@ class TestScripts:
         assert second_attendance.first_half == False
         assert second_attendance.late == LateTypes.ON_TIME
 
-    def test_student_absent_all_week(self, session):
+
+    def test_student_absent_all_week(self, session, mocker):
+        sheet_push_attendance_mock = mocker.patch(
+            "src.database.sheet.Sheet.push_attendance"
+        )
         NUMBER_OF_CLASS_DAYS = 5
         date_times = []
         is_first_half = []
