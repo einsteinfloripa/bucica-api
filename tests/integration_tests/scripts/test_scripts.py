@@ -75,13 +75,7 @@ class TestScripts:
 
     def test_student_absent_in_second_class(self, session, client_context):
         with freezegun.freeze_time("2023-04-10 18:00") as frozen_datetime:
-            with mock.patch(
-                "src.utils.schedule.Schedule.get_current_class",
-                return_value=CourseClass(
-                    Weekday.MONDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value
-                ),
-            ):
-                client_context.client.post("/presenca/11122233344", auth=client_context.credentials)
+            client_context.client.post("/presenca/11122233344", auth=client_context.credentials)
             schedule.run_pending()
 
             frozen_datetime.tick(
@@ -117,14 +111,7 @@ class TestScripts:
             schedule.run_pending()
 
             frozen_datetime.tick(delta=datetime.timedelta(minutes=20))  # 20:21:01
-
-            with mock.patch(
-                "src.utils.schedule.Schedule.get_current_class",
-                return_value=CourseClass(
-                    Weekday.MONDAY.value, SecondClassHalf.BEGIN.value, SecondClassHalf.END.value
-                ),
-            ):
-                client_context.client.post("/presenca/11122233344", auth=client_context.credentials)
+            client_context.client.post("/presenca/11122233344", auth=client_context.credentials)
 
             frozen_datetime.tick(delta=datetime.timedelta(hours=2))  # 22:01:01
             schedule.run_pending()
@@ -146,13 +133,7 @@ class TestScripts:
 
     def test_student_present_in_both_classes(self, session, client_context):
         with freezegun.freeze_time("2023-04-10 18:00") as frozen_datetime:
-            with mock.patch(
-                "src.utils.schedule.Schedule.get_current_class",
-                return_value=CourseClass(
-                    Weekday.MONDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value
-                ),
-            ):
-                client_context.client.post("/presenca/11122233344", auth=client_context.credentials)
+            client_context.client.post("/presenca/11122233344", auth=client_context.credentials)
             schedule.run_pending()
 
             frozen_datetime.tick(
@@ -161,14 +142,7 @@ class TestScripts:
             schedule.run_pending()
 
             frozen_datetime.tick(delta=datetime.timedelta(minutes=20))  # 20:21:01
-
-            with mock.patch(
-                "src.utils.schedule.Schedule.get_current_class",
-                return_value=CourseClass(
-                    Weekday.MONDAY.value, SecondClassHalf.BEGIN.value, SecondClassHalf.END.value
-                ),
-            ):
-                client_context.client.post("/presenca/11122233344", auth=client_context.credentials)
+            client_context.client.post("/presenca/11122233344", auth=client_context.credentials)
 
             frozen_datetime.tick(delta=datetime.timedelta(hours=2))  # 22:01:01
             schedule.run_pending()
