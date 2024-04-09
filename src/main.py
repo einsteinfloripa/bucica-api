@@ -5,7 +5,6 @@ from fastapi.responses import JSONResponse
 from src.errors.base_exception import AppExceptionBase
 from src.routers.students_router import router as PresencaRouter
 from src.routers.auth_router import router as AuthRouter
-from src.routers.donor_router import router as DonorRouter
 from src.scripts.register_attendance_first_half import register_student_first_half
 from src.scripts.register_attendance_second_half import register_student_second_half
 from src.scripts.update_attendance_loop import update_attendance_loop
@@ -48,4 +47,3 @@ app.add_middleware(
 
 app.include_router(PresencaRouter)
 app.include_router(AuthRouter)
-app.include_router(DonorRouter)

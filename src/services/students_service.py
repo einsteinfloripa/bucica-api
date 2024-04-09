@@ -34,7 +34,9 @@ class StudentService:
         current_class = self.schedule.get_current_class()
         if current_class is None:
             raise NotOngoingClass(
-                f"Não há aula em andamento. As presenças só podem ser registradas nos intervalo entre {FirstClassHalf.begin_time_str()} até {FirstClassHalf.end_time_str()} e {SecondClassHalf.begin_time_str()} até {SecondClassHalf.end_time_str()}"
+                f"Não há aula em andamento. As presenças só podem ser registradas nos intervalo entre \
+{FirstClassHalf.begin_time_str()} até {FirstClassHalf.end_time_str()} e \
+{SecondClassHalf.begin_time_str()} até {SecondClassHalf.end_time_str()}"
             )
 
         attendance = self.attendance_repository.get_last_with(student_id=student.id)

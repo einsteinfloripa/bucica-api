@@ -11,8 +11,6 @@ from src.database.sheet import SheetClass, AttendanceData
 def clear_sheet_attendance():
     SheetClass._SheetClass__attendance_buffer = []
 
-@pytest.mark.unit
-@pytest.mark.sheet
 @pytest.mark.usefixtures("clear_sheet_attendance")
 class Test_SheetClass:
     EXPECTED_CREDS_DICT = {

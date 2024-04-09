@@ -1,5 +1,6 @@
 import enum
 from datetime import datetime, time, timedelta
+from src.utils.date_handler import DateHandler
 
 
 class LateTypes(enum.Enum):
@@ -24,7 +25,6 @@ class FirstClassHalf(enum.Enum):
 
     def end_time_str() -> str:
         return FirstClassHalf.END.value.strftime("%H:%M")
-
 
 
 class SecondClassHalf(enum.Enum):
@@ -56,7 +56,7 @@ class CourseClass:
         return False
 
     def is_late(self):
-        is_on_time = datetime.now() - self.start <= self.ON_TIME_TOLERANCE 
+        is_on_time = datetime.now() - self.start <= self.ON_TIME_TOLERANCE
         if is_on_time:
             return LateTypes.ON_TIME
         else:
@@ -88,7 +88,6 @@ class Schedule:
                 SecondClassHalf.END.value,
             ),
         ]
-
         WEDNESDAY = [
             CourseClass(
                 Weekday.WEDNESDAY.value,
@@ -121,9 +120,10 @@ class Schedule:
         ]
         CLASSES_SCHEDULE = MONDAY + TUESDAY + WEDNESDAY + THURSDAY + FRIDAY
 
-        classes_schedule = CLASSES_SCHEDULE
-        for course_class in classes_schedule:
+        if DateHandler().in_vacation_time():
+            return None
+
+        for course_class in CLASSES_SCHEDULE:
             if course_class.is_ongoing():
                 return course_class
-
         return None

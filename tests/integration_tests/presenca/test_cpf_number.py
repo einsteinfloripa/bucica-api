@@ -1,6 +1,6 @@
-import pytest
-
 from datetime import datetime
+
+import pytest
 from freezegun import freeze_time
 
 from src.repositories.attendance_repository import AttendanceRepository
@@ -49,7 +49,7 @@ class TestPresencaCpfNumber:
         client_context: ClientContext,
     ):
         response = client_context.client.post(
-            f"/presenca/11122233344", auth=client_context.credentials
+            "/presenca/11122233344", auth=client_context.credentials
         )
 
         response_body = response.json()
@@ -58,7 +58,9 @@ class TestPresencaCpfNumber:
         assert response_body["app_exception"] == "NotOngoingClass"
         assert (
             response_body["message"]
-            == f"Não há aula em andamento. As presenças só podem ser registradas nos intervalo entre {FirstClassHalf.begin_time_str()} até {FirstClassHalf.end_time_str()} e {SecondClassHalf.begin_time_str()} até {SecondClassHalf.end_time_str()}"
+            == f"Não há aula em andamento. As presenças só podem ser registradas nos intervalo entre \
+{FirstClassHalf.begin_time_str()} até {FirstClassHalf.end_time_str()} e \
+{SecondClassHalf.begin_time_str()} até {SecondClassHalf.end_time_str()}"
         )
 
     @freeze_time("2023-04-10 17:45:00")
@@ -74,7 +76,7 @@ class TestPresencaCpfNumber:
         )
 
         response = client_context.client.post(
-            f"/presenca/11122233344", auth=client_context.credentials
+            "/presenca/11122233344", auth=client_context.credentials
         )
 
         response_body = response.json()

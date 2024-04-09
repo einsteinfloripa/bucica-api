@@ -9,6 +9,9 @@ from src.utils.schedule import LateTypes
 from src.database.sheet import Sheet, AttendanceData
 
 def register_attendance():
+    if DateHandler().in_vacation_time():
+        print("Férias, não serão registradas faltas para o segundo turno...")
+        return
     if DateHandler().is_holiday(datetime.now()):
         print("Feriado, não serão registradas faltas para o segundo turno...")
         return
