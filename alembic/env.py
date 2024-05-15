@@ -7,6 +7,7 @@ from alembic import context
 from src.database.session import SQLALCHEMY_DATABASE_URL, engine
 from src.models.base_model import Base
 from src.models.students_model import CadastroAlunos, Presenca
+from src.models.donor_model import DonorModel
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

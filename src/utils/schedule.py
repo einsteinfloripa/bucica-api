@@ -1,15 +1,10 @@
 import enum
 from datetime import datetime, time, timedelta
-
-
-class Late(enum.Enum):
-    ON_TIME = timedelta(seconds=1800)  # 30 minutes
-    HALF_LATE = timedelta(seconds=3900)  # 1 hour and 5 minutes
+from src.utils.date_handler import DateHandler
 
 
 class LateTypes(enum.Enum):
     ON_TIME = "sem atraso"
-    HALF_LATE = "meio atraso"
     LATE = "atrasado"
 
 
@@ -25,13 +20,27 @@ class FirstClassHalf(enum.Enum):
     BEGIN = time(17, 45)
     END = time(20, 00)
 
+    def begin_time_str() -> str:
+        return FirstClassHalf.BEGIN.value.strftime("%H:%M")
+
+    def end_time_str() -> str:
+        return FirstClassHalf.END.value.strftime("%H:%M")
+
 
 class SecondClassHalf(enum.Enum):
     BEGIN = time(20, 15)
     END = time(22, 00)
 
+    def begin_time_str() -> str:
+        return SecondClassHalf.BEGIN.value.strftime("%H:%M")
+
+    def end_time_str() -> str:
+        return SecondClassHalf.END.value.strftime("%H:%M")
+
 
 class CourseClass:
+    ON_TIME_TOLERANCE = timedelta(seconds=2100)  # 35 minutes
+
     def __init__(self, weekday: int, start_time: time, end_time: time):
         self.start = datetime.combine(datetime.today(), start_time)
         self.end = datetime.combine(datetime.today(), end_time)
@@ -47,18 +56,11 @@ class CourseClass:
         return False
 
     def is_late(self):
-        is_late = datetime.now() - self.start > Late.HALF_LATE.value
-        is_half_late = datetime.now() - self.start <= Late.HALF_LATE.value
-        is_on_time = datetime.now() - self.start <= Late.ON_TIME.value
-
-        if is_late:
-            return LateTypes.LATE
-
-        if is_half_late and not is_on_time:
-            return LateTypes.HALF_LATE
-
+        is_on_time = datetime.now() - self.start <= self.ON_TIME_TOLERANCE
         if is_on_time:
             return LateTypes.ON_TIME
+        else:
+            return LateTypes.LATE
 
     def is_absent(self) -> bool:
         return not self.is_ongoing()
@@ -68,9 +70,6 @@ class CourseClass:
 
 
 class Schedule:
-    def __init__(self) -> None:
-        pass
-
     def get_current_class(self) -> CourseClass | None:
         MONDAY = [
             CourseClass(Weekday.MONDAY.value, FirstClassHalf.BEGIN.value, FirstClassHalf.END.value),
@@ -89,7 +88,6 @@ class Schedule:
                 SecondClassHalf.END.value,
             ),
         ]
-
         WEDNESDAY = [
             CourseClass(
                 Weekday.WEDNESDAY.value,
@@ -122,9 +120,10 @@ class Schedule:
         ]
         CLASSES_SCHEDULE = MONDAY + TUESDAY + WEDNESDAY + THURSDAY + FRIDAY
 
-        classes_schedule = CLASSES_SCHEDULE
-        for course_class in classes_schedule:
+        if DateHandler().in_vacation_time():
+            return None
+
+        for course_class in CLASSES_SCHEDULE:
             if course_class.is_ongoing():
                 return course_class
-
         return None

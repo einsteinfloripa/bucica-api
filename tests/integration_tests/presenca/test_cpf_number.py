@@ -1,8 +1,7 @@
-import pytest
-
 from datetime import datetime
+
+import pytest
 from freezegun import freeze_time
-from src.models.students_model import Presenca
 
 from src.repositories.attendance_repository import AttendanceRepository
 from src.utils.schedule import (
@@ -50,16 +49,18 @@ class TestPresencaCpfNumber:
         client_context: ClientContext,
     ):
         response = client_context.client.post(
-            f"/presenca/11122233344", auth=client_context.credentials
+            "/presenca/11122233344", auth=client_context.credentials
         )
 
         response_body = response.json()
 
         assert response.status_code == 400
-        assert response_body["app_exception"] == "NotOngoingLesson"
+        assert response_body["app_exception"] == "NotOngoingClass"
         assert (
             response_body["message"]
-            == "Não há aula em andamento. As presenças só podem ser registradas nos intervalo entre 17:45 até 20:00 e 20:15 até 22:00"
+            == f"Não há aula em andamento. As presenças só podem ser registradas nos intervalo entre \
+{FirstClassHalf.begin_time_str()} até {FirstClassHalf.end_time_str()} e \
+{SecondClassHalf.begin_time_str()} até {SecondClassHalf.end_time_str()}"
         )
 
     @freeze_time("2023-04-10 17:45:00")
@@ -75,7 +76,7 @@ class TestPresencaCpfNumber:
         )
 
         response = client_context.client.post(
-            f"/presenca/11122233344", auth=client_context.credentials
+            "/presenca/11122233344", auth=client_context.credentials
         )
 
         response_body = response.json()
@@ -190,6 +191,26 @@ class TestPresencaCpfNumber:
                     "first_half": False,
                 },
             ),
+            (
+                datetime(2023, 4, 14, 21, 00),
+                {
+                    "status_code": 201,
+                    "late": LateTypes.LATE,
+                    "absence": False,
+                    "created_at": datetime(2023, 4, 14, 21, 00),
+                    "first_half": False,
+                },
+            ),
+            (
+                datetime(2023, 4, 14, 18, 30),
+                {
+                    "status_code": 201,
+                    "late": LateTypes.LATE,
+                    "absence": False,
+                    "created_at": datetime(2023, 4, 14, 18, 30),
+                    "first_half": True,
+                },
+            ),
         ],
     )
     def test_attendance_successfully_created_on_time(
@@ -200,257 +221,7 @@ class TestPresencaCpfNumber:
     ):
         with freeze_time(request_time):
             response = client_context.client.post(
-                f"/presenca/11122233344", auth=client_context.credentials
-            )
-
-        attendance = attendance_repository.get_last_with(student_id=1)
-
-        assert response.status_code == expected_response["status_code"]
-        assert attendance.student_id == 1
-        assert attendance.late == expected_response["late"]
-        assert attendance.absence == expected_response["absence"]
-        assert attendance.created_at == expected_response["created_at"]
-        assert attendance.first_half == expected_response["first_half"]
-
-    @pytest.mark.parametrize(
-        "request_time, expected_response",
-        [
-            (
-                datetime(2023, 4, 10, 18, 30),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.HALF_LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 10, 18, 30),
-                    "first_half": True,
-                },
-            ),
-            (
-                datetime(2023, 4, 10, 20, 55),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.HALF_LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 10, 20, 55),
-                    "first_half": False,
-                },
-            ),
-            (
-                datetime(2023, 4, 11, 18, 30),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.HALF_LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 11, 18, 30),
-                    "first_half": True,
-                },
-            ),
-            (
-                datetime(2023, 4, 11, 20, 55),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.HALF_LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 11, 20, 55),
-                    "first_half": False,
-                },
-            ),
-            (
-                datetime(2023, 4, 12, 18, 30),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.HALF_LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 12, 18, 30),
-                    "first_half": True,
-                },
-            ),
-            (
-                datetime(2023, 4, 12, 20, 55),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.HALF_LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 12, 20, 55),
-                    "first_half": False,
-                },
-            ),
-            (
-                datetime(2023, 4, 13, 18, 30),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.HALF_LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 13, 18, 30),
-                    "first_half": True,
-                },
-            ),
-            (
-                datetime(2023, 4, 13, 20, 55),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.HALF_LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 13, 20, 55),
-                    "first_half": False,
-                },
-            ),
-            (
-                datetime(2023, 4, 14, 18, 30),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.HALF_LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 14, 18, 30),
-                    "first_half": True,
-                },
-            ),
-            (
-                datetime(2023, 4, 14, 20, 55),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.HALF_LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 14, 20, 55),
-                    "first_half": False,
-                },
-            ),
-        ],
-    )
-    def test_attendance_successfully_created_half_late(
-        self,
-        client_context: ClientContext,
-        request_time: datetime,
-        expected_response: dict,
-    ):
-        with freeze_time(request_time):
-            response = client_context.client.post(
-                f"/presenca/11122233344", auth=client_context.credentials
-            )
-
-        attendance = attendance_repository.get_last_with(student_id=1)
-
-        assert response.status_code == expected_response["status_code"]
-        assert attendance.student_id == 1
-        assert attendance.late == expected_response["late"]
-        assert attendance.absence == expected_response["absence"]
-        assert attendance.created_at == expected_response["created_at"]
-        assert attendance.first_half == expected_response["first_half"]
-
-    @pytest.mark.parametrize(
-        "request_time, expected_response",
-        [
-            (
-                datetime(2023, 4, 10, 19, 00),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 10, 19, 00),
-                    "first_half": True,
-                },
-            ),
-            (
-                datetime(2023, 4, 10, 21, 40),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 10, 21, 40),
-                    "first_half": False,
-                },
-            ),
-            (
-                datetime(2023, 4, 11, 19, 00),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 11, 19, 00),
-                    "first_half": True,
-                },
-            ),
-            (
-                datetime(2023, 4, 11, 21, 40),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 11, 21, 40),
-                    "first_half": False,
-                },
-            ),
-            (
-                datetime(2023, 4, 12, 19, 00),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 12, 19, 00),
-                    "first_half": True,
-                },
-            ),
-            (
-                datetime(2023, 4, 12, 21, 40),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 12, 21, 40),
-                    "first_half": False,
-                },
-            ),
-            (
-                datetime(2023, 4, 13, 19, 00),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 13, 19, 00),
-                    "first_half": True,
-                },
-            ),
-            (
-                datetime(2023, 4, 13, 21, 40),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 13, 21, 40),
-                    "first_half": False,
-                },
-            ),
-            (
-                datetime(2023, 4, 14, 19, 00),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 14, 19, 00),
-                    "first_half": True,
-                },
-            ),
-            (
-                datetime(2023, 4, 14, 21, 40),
-                {
-                    "status_code": 201,
-                    "late": LateTypes.LATE,
-                    "absence": False,
-                    "created_at": datetime(2023, 4, 14, 21, 40),
-                    "first_half": False,
-                },
-            ),
-        ],
-    )
-    def test_attendance_successfully_created_late(
-        self,
-        client_context: ClientContext,
-        request_time: datetime,
-        expected_response: dict,
-    ):
-        with freeze_time(request_time):
-            response = client_context.client.post(
-                f"/presenca/11122233344", auth=client_context.credentials
+                "/presenca/11122233344", auth=client_context.credentials
             )
 
         attendance = attendance_repository.get_last_with(student_id=1)

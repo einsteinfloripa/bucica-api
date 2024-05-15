@@ -1,5 +1,4 @@
 from datetime import date, datetime
-import time
 import schedule
 from sqlalchemy import func
 
@@ -7,9 +6,12 @@ from src.database.session import SessionLocal
 from src.models.students_model import CadastroAlunos, Presenca
 from src.utils.schedule import LateTypes
 from src.utils.date_handler import DateHandler
-
+from src.database.sheet import Sheet, AttendanceData
 
 def register_attendance():
+    if DateHandler().in_vacation_time():
+        print("Férias, não serão registradas faltas para o primeiro turno...")
+        return
     if DateHandler().is_holiday(datetime.now()):
         print("Feriado, não serão registradas faltas para o primeiro turno...")
         return
@@ -39,8 +41,17 @@ def register_attendance():
             )
 
             db.add(new_attendance)
-            db.commit()
-            db.refresh(new_attendance)
+            Sheet.push_attendance(
+                AttendanceData(
+                    new_attendance.student_id,
+                    new_attendance.first_half,
+                    new_attendance.absence,
+                    new_attendance.late.value,
+                    str(new_attendance.created_at),
+                )
+            )
+
+    db.commit()
 
 
 def register_student_first_half():
@@ -51,6 +62,4 @@ def register_student_first_half():
     schedule.every().friday.at("20:01").do(register_attendance)
 
     print("Iniciado Job para registar faltas para o primeiro turno...")
-    while True:
-        schedule.run_pending()
-        time.sleep(3)
+

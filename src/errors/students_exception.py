@@ -12,10 +12,10 @@ class StudentNotFound(AppExceptionBase):
         AppExceptionBase.__init__(self, status_code, message)
 
 
-class NotOngoingLesson(AppExceptionBase):
+class NotOngoingClass(AppExceptionBase):
     def __init__(self, message: Optional[str] = ""):
         """
-        Not ongoing lesson
+        Not ongoing class
         """
         status_code = 400
         AppExceptionBase.__init__(self, status_code, message)
